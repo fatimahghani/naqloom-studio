@@ -1,0 +1,545 @@
+import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+
+interface InrootProcessCard {
+  number: string;
+  phaseKicker: string;
+  centerWord: string;
+  subtitle: string;
+  description: string;
+  bullets: string[];
+  tools: string;
+  imageUrl: string;
+  courtyardCropPosition: string;
+  sunbeamOverlay: string;
+  wordGradient: string;
+  boxTint: string;
+}
+
+const INROOT_PROCESS_CARDS: InrootProcessCard[] = [
+  {
+    number: '01',
+    phaseKicker: '01 · Ignition',
+    centerWord: 'DISCOVERY',
+    subtitle: 'Brief & Research',
+    description:
+      'Before any design begins, we get on the same page. We start with a short call or questionnaire about your business, audience, and goals, then research competitors and build a moodboard.',
+    bullets: [
+      'Deep dive call or client questionnaire',
+      'Audience, market & competitor research',
+      'Visual references, moodboard & roadmap',
+    ],
+    tools: 'Brief · Research · Moodboard',
+    // Vintage sunlit bistro table with open book, coffee cup & dappled shadows matching the main page
+    imageUrl:
+      'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80',
+    courtyardCropPosition: '28% 72%',
+    sunbeamOverlay:
+      'radial-gradient(circle at 75% 22%, rgba(253, 251, 212, 0.45) 0%, rgba(217, 167, 110, 0.28) 42%, rgba(24, 56, 60, 0.48) 82%, rgba(24, 56, 60, 0.68) 100%)',
+    wordGradient:
+      'linear-gradient(90deg, #FDFBD4 0%, #D9D7B6 35%, #FFFFFF 68%, #FDFBD4 100%)',
+    boxTint:
+      'linear-gradient(135deg, rgba(84, 83, 51, 0.82) 0%, rgba(24, 56, 60, 0.88) 100%)',
+  },
+  {
+    number: '02',
+    phaseKicker: '02 · Direction',
+    centerWord: 'STRATEGY',
+    subtitle: 'Concepts & Sketches',
+    description:
+      'Once we know the “why,” we move into shaping the “how.” I sketch ideas and present 2–3 directions with logo concepts, color palettes, and font pairings so you choose the one that fits best.',
+    bullets: [
+      '2–3 distinct creative & brand directions',
+      'Logo sketches & typographic pairings',
+      'Curated color systems & brand positioning',
+    ],
+    tools: 'Sketches · Palette · Typography',
+    // Warm sunlit notebook sketches, fountain pen & dappled window shadows
+    imageUrl:
+      'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80',
+    courtyardCropPosition: '52% 28%',
+    sunbeamOverlay:
+      'linear-gradient(135deg, rgba(253, 251, 212, 0.44) 0%, rgba(217, 175, 122, 0.30) 45%, rgba(84, 83, 51, 0.50) 76%, rgba(24, 56, 60, 0.68) 100%)',
+    wordGradient:
+      'linear-gradient(90deg, #FDFBD4 0%, #D9D7B6 48%, #FDFBD4 100%)',
+    boxTint:
+      'linear-gradient(135deg, rgba(84, 83, 51, 0.84) 0%, rgba(36, 48, 46, 0.90) 100%)',
+  },
+  {
+    number: '03',
+    phaseKicker: '03 · Visual System',
+    centerWord: 'DESIGN',
+    subtitle: 'Identity & Layouts',
+    description:
+      'Here’s where things start to look real. I translate strategy into cohesive visuals—crafting identity systems, editorial layouts, packaging, and interfaces that look timeless and make sense.',
+    bullets: [
+      'Primary & secondary logo mark architecture',
+      'Editorial grids, packaging & visual direction',
+      'High-fidelity UI layouts & brand touchpoints',
+    ],
+    tools: 'Identity · Grids · Art Direction',
+    // Sun-drenched Mediterranean stone wall, shutters & dappled olive tree shadows
+    imageUrl:
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80',
+    courtyardCropPosition: '48% 40%',
+    sunbeamOverlay:
+      'radial-gradient(circle at 25% 30%, rgba(253, 251, 212, 0.48) 0%, rgba(217, 215, 182, 0.28) 44%, rgba(24, 56, 60, 0.52) 80%, rgba(24, 56, 60, 0.70) 100%)',
+    wordGradient:
+      'linear-gradient(90deg, #FDFBD4 0%, #D9D7B6 42%, #FFFFFF 75%, #D9D7B6 100%)',
+    boxTint:
+      'linear-gradient(135deg, rgba(135, 134, 114, 0.76) 0%, rgba(24, 56, 60, 0.90) 100%)',
+  },
+  {
+    number: '04',
+    phaseKicker: '04 · Craft',
+    centerWord: 'BUILD',
+    subtitle: 'Design & Revisions',
+    description:
+      'The chosen direction is built with precision in Affinity, Illustrator, or Figma, then stress-tested on real-world mockups. You give feedback and I refine every detail in focused revision rounds.',
+    bullets: [
+      'Vector execution in Illustrator, Affinity & Figma',
+      'Tactile print, packaging & digital mockups',
+      'Focused feedback & iterative refinement rounds',
+    ],
+    tools: 'Vector Design · Mockups · Feedback',
+    // Tactile ceramic, botanical shadows, linen paper & warm golden afternoon light
+    imageUrl:
+      'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=80',
+    courtyardCropPosition: '18% 45%',
+    sunbeamOverlay:
+      'linear-gradient(155deg, rgba(253, 251, 212, 0.42) 0%, rgba(217, 165, 112, 0.28) 40%, rgba(84, 83, 51, 0.52) 74%, rgba(24, 56, 60, 0.68) 100%)',
+    wordGradient:
+      'linear-gradient(90deg, #D9D7B6 0%, #FDFBD4 50%, #FFFFFF 80%, #D9D7B6 100%)',
+    boxTint:
+      'linear-gradient(135deg, rgba(84, 83, 51, 0.82) 0%, rgba(24, 56, 60, 0.90) 100%)',
+  },
+  {
+    number: '05',
+    phaseKicker: '05 · Launch',
+    centerWord: 'LAUNCH',
+    subtitle: 'Final Files & Handover',
+    description:
+      'We test everything, refine what’s needed, and make sure your brand is smooth and ready before it meets the world. You receive final logo files, brand guidelines, and print/digital formats.',
+    bullets: [
+      'Final master logo packages (PDF, PNG, SVG, EPS)',
+      'Comprehensive brand guidelines & usage book',
+      'Print-ready & digital handover with support',
+    ],
+    tools: 'Logo Files · Guidelines · Export',
+    // Sunlit sheer linen curtains & Mediterranean archway glowing in golden hour
+    imageUrl:
+      'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=900&q=80',
+    courtyardCropPosition: '84% 52%',
+    sunbeamOverlay:
+      'radial-gradient(circle at 80% 35%, rgba(253, 251, 212, 0.50) 0%, rgba(217, 168, 108, 0.30) 44%, rgba(24, 56, 60, 0.52) 80%, rgba(24, 56, 60, 0.70) 100%)',
+    wordGradient:
+      'linear-gradient(90deg, #FDFBD4 0%, #D9D7B6 45%, #FFFFFF 78%, #FDFBD4 100%)',
+    boxTint:
+      'linear-gradient(135deg, rgba(84, 83, 51, 0.80) 0%, rgba(24, 56, 60, 0.90) 100%)',
+  },
+];
+
+// Immediately begin preloading all process images at module evaluation time so they are decoded in cache before scroll
+if (typeof window !== 'undefined') {
+  INROOT_PROCESS_CARDS.forEach((card) => {
+    const img = new Image();
+    img.decoding = 'async';
+    img.src = card.imageUrl;
+  });
+}
+
+/**
+ * Generates a real 35mm analog color + silver-halide film grain tile on an offscreen canvas
+ * so every process card has crisp, authentic vintage grain matching the main hero page.
+ */
+function useVintageFilmGrainTile(): string {
+  return useMemo(() => {
+    if (typeof document === 'undefined') return '';
+    const size = 220;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return '';
+
+    const imgData = ctx.createImageData(size, size);
+    const data = imgData.data;
+
+    // Deterministic pseudo-random generator for rich 35mm color dye + luminance grain
+    let seed = 4219;
+    const rand = () => {
+      seed = (seed * 16807) % 2147483647;
+      return (seed - 1) / 2147483646;
+    };
+
+    for (let i = 0; i < data.length; i += 4) {
+      const luma = (rand() - 0.5) * 155;
+      const warmShift = (rand() - 0.46) * 42;
+      const tealShift = (rand() - 0.5) * 36;
+
+      data[i] = Math.min(255, Math.max(0, 128 + luma + warmShift)); // R (warm amber/cream grain)
+      data[i + 1] = Math.min(255, Math.max(0, 126 + luma)); // G
+      data[i + 2] = Math.min(255, Math.max(0, 122 + luma + tealShift)); // B (subtle cyan/teal shadow speckle)
+      data[i + 3] = 98; // Strong analog grain density
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    return canvas.toDataURL('image/png');
+  }, []);
+}
+
+export const ProcessSection: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackWrapperRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const [maxScrollX, setMaxScrollX] = useState<number>(1926);
+  const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
+  const grainTileUrl = useVintageFilmGrainTile();
+
+  // Measure the exact horizontal travel distance so the last card aligns cleanly with the right edge of the 1100px frame
+  useEffect(() => {
+    const updateMeasurements = () => {
+      if (!trackRef.current || !trackWrapperRef.current) return;
+      const trackWidth = trackRef.current.scrollWidth;
+      const visibleWidth = trackWrapperRef.current.clientWidth;
+      const computedMax = Math.max(0, trackWidth - visibleWidth + 24);
+      setMaxScrollX(computedMax);
+    };
+
+    updateMeasurements();
+    const observer = new ResizeObserver(updateMeasurements);
+    if (trackRef.current) observer.observe(trackRef.current);
+    if (trackWrapperRef.current) observer.observe(trackWrapperRef.current);
+    window.addEventListener('resize', updateMeasurements);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateMeasurements);
+    };
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+  });
+
+  // Translate the horizontal track from 0px to -maxScrollX as the user scrolls vertically through the 3000px section
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxScrollX]);
+
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    const idx = Math.min(
+      INROOT_PROCESS_CARDS.length - 1,
+      Math.max(0, Math.round(latest * (INROOT_PROCESS_CARDS.length - 1)))
+    );
+    setActiveStepIndex(idx);
+  });
+
+  const scrollToCardIndex = (index: number) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const sectionTop = window.scrollY + rect.top;
+    const scrollableDistance = sectionRef.current.offsetHeight - window.innerHeight;
+    if (scrollableDistance <= 0) return;
+
+    const targetProgress = index / (INROOT_PROCESS_CARDS.length - 1);
+    window.scrollTo({
+      top: sectionTop + targetProgress * scrollableDistance,
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <section
+      id="process"
+      ref={sectionRef}
+      aria-label="The Naqloom Process"
+      className="relative w-full h-[3000px] bg-[#FDFBD4] text-[#18383C] select-none"
+    >
+      {/* Continuous Vertical Architectural Studio Margin Lines */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-6 sm:left-10 lg:left-16 w-px bg-[#18383C]/[0.08] z-20"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-6 sm:right-10 lg:right-16 w-px bg-[#18383C]/[0.08] z-20"
+      />
+      {/* Sticky 100vh Viewport Container (Matches .framer-1dlexu3 on inrootdesign.com) */}
+      <div className="sticky top-0 w-full h-svh overflow-hidden flex flex-col justify-between items-center py-8 sm:py-12">
+        {/* Top Quiet Studio Context Bar */}
+        <div className="w-full max-w-[1280px] px-8 sm:px-14 lg:px-24 flex items-center justify-between text-[11px] font-sans font-medium uppercase tracking-[0.24em] text-[#545333] shrink-0">
+          <span>03 · THE PROCESS</span>
+          <span className="hidden sm:inline font-serif italic normal-case tracking-[0.02em] text-base text-[#545333]">
+            How a quiet concept becomes a tactile brand world
+          </span>
+          <span className="font-mono tabular-nums text-[#18383C]">
+            0{activeStepIndex + 1} / 0{INROOT_PROCESS_CARDS.length}
+          </span>
+        </div>
+
+        {/* Center Horizontal Scroll Stage (Matches .framer-13tztxc & .framer-nocpvy on inrootdesign.com) */}
+        <div className="w-full flex-1 flex items-center justify-center overflow-hidden my-auto">
+          <div
+            ref={trackWrapperRef}
+            className="w-full max-w-[1100px] h-full max-h-[560px] px-5 flex items-center justify-start overflow-visible"
+          >
+            <motion.div
+              ref={trackRef}
+              style={{ x }}
+              className="flex flex-row items-center justify-start gap-6 h-full will-change-transform"
+            >
+              {/* ITEM 0: Left Title Block */}
+              <div className="w-[240px] sm:w-[265px] h-[480px] sm:h-[548px] shrink-0 flex flex-col justify-center items-start gap-5 pr-2">
+                <div className="flex flex-col items-start">
+                  <p className="font-display text-[50px] sm:text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
+                    The
+                  </p>
+                  <p className="font-display text-[50px] sm:text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
+                    Naqloom
+                  </p>
+                  <p className="font-display text-[50px] sm:text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
+                    Process
+                  </p>
+                </div>
+
+                {/* Editorial Luxury Serif Secondary Subtitle */}
+                <div className="font-serif italic text-[22px] sm:text-[26px] leading-[1.18] tracking-[0.01em] text-[#545333] -mt-1">
+                  A proven five-stage discipline
+                </div>
+
+                {/* Studio process intro text */}
+                <div className="pt-3 border-t border-[#D9D7B6] space-y-2 max-w-[245px]">
+                  <p className="font-serif italic text-base font-medium text-[#18383C] leading-snug">
+                    How I work — from brief to final files.
+                  </p>
+                  <p className="font-sans text-xs text-[#545333] leading-relaxed">
+                    Every project follows clear steps, so you always know what happens next. I listen first, explore ideas, refine the best one, and deliver files that are ready to use.
+                  </p>
+                </div>
+              </div>
+
+              {/* ITEMS 1..5: The 5 Horizontal Process Cards with Dreamy Vintage Grainy Courtyard Imagery */}
+              {INROOT_PROCESS_CARDS.map((card, index) => (
+                <article
+                  key={card.number}
+                  onClick={() => scrollToCardIndex(index)}
+                  className="group relative w-[84vw] sm:w-[460px] md:w-[525px] h-[480px] sm:h-[548px] shrink-0 overflow-hidden bg-[#8A795D] cursor-pointer shadow-[0_20px_50px_rgba(24,56,60,0.16)]"
+                >
+                  {/* 0. Instant Local Sunlit Studio Base Layer (Zero network delay, prevents any dark flash) */}
+                  <img
+                    src="/assets/aistudio/retro_design_studio_poster.jpg"
+                    alt=""
+                    aria-hidden="true"
+                    loading="eager"
+                    decoding="sync"
+                    style={{ objectPosition: card.courtyardCropPosition }}
+                    className="
+                      absolute inset-0 w-full h-full object-cover
+                      scale-105 pointer-events-none
+                    "
+                  />
+
+                  {/* 1A. Primary Vintage Subject Photograph — Eagerly loaded with hardware-accelerated CSS color grade */}
+                  <img
+                    src={card.imageUrl}
+                    alt={`${card.centerWord} — ${card.subtitle}`}
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
+                    style={{ filter: 'sepia(0.22) contrast(1.05) brightness(1.04) saturate(1.14)' }}
+                    className="
+                      absolute inset-0 w-full h-full object-cover object-center
+                      scale-105 group-hover:scale-110
+                      transition-transform duration-1000 ease-out
+                    "
+                  />
+
+                  {/* 1B. Blended Main-Page Retro Studio Light & Grain Texture Layer */}
+                  <img
+                    src="/assets/aistudio/retro_design_studio_poster.jpg"
+                    alt=""
+                    aria-hidden="true"
+                    loading="eager"
+                    decoding="async"
+                    style={{ objectPosition: card.courtyardCropPosition }}
+                    className="
+                      absolute inset-0 w-full h-full object-cover
+                      opacity-45 mix-blend-soft-light
+                      scale-110 group-hover:scale-115
+                      transition-transform duration-1000 ease-out
+                      pointer-events-none
+                    "
+                  />
+
+                  {/* 2. Warm Sun-Drenched Amber & Deep Teal Courtyard Color Grading */}
+                  <div
+                    className="absolute inset-0 pointer-events-none mix-blend-multiply"
+                    style={{ background: card.sunbeamOverlay }}
+                  />
+
+                  {/* 3. Dappled Golden Sunbeams & Soft Analog Halation Glow */}
+                  <div
+                    className="absolute inset-0 pointer-events-none mix-blend-screen opacity-55"
+                    style={{
+                      background:
+                        'radial-gradient(ellipse at 78% 18%, rgba(253, 251, 212, 0.52) 0%, rgba(235, 168, 98, 0.28) 38%, transparent 72%)',
+                    }}
+                  />
+
+                  {/* 4. 35mm Analog Film Grain Layer (Matches main page grainy texture) */}
+                  {grainTileUrl && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-75"
+                      style={{
+                        backgroundImage: `url(${grainTileUrl})`,
+                        backgroundRepeat: 'repeat',
+                        backgroundSize: '180px 180px',
+                      }}
+                    />
+                  )}
+
+                  {/* 5. Subtle Vintage Film Frame Vignette */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      boxShadow: 'inset 0 0 60px rgba(24, 56, 60, 0.38)',
+                    }}
+                  />
+
+                  {/* 6. Top-Left & Top-Right Quiet Step Metadata */}
+                  <div className="relative z-10 px-6 pt-5 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.14em] text-[#FDFBD4] drop-shadow-[0_1px_4px_rgba(24,56,60,0.8)]">
+                    <span>{card.phaseKicker}</span>
+                    <span className="text-[#FDFBD4]/90">{card.subtitle}</span>
+                  </div>
+
+                  {/* 7. Center Giant All-Caps Editorial Wordmark (DISCOVERY / STRATEGY / DESIGN / BUILD / LAUNCH) */}
+                  <div className="
+                    absolute inset-x-0 top-[42%] -translate-y-1/2
+                    z-10 flex items-center justify-center px-4
+                    pointer-events-none select-none
+                  ">
+                    <h3
+                      className="
+                        font-display font-normal uppercase
+                        text-[48px] sm:text-[66px] md:text-[74px]
+                        leading-none tracking-[0.02em] text-center
+                        drop-shadow-[0_6px_26px_rgba(24,56,60,0.65)]
+                        transition-transform duration-700 ease-out
+                        group-hover:scale-[1.03]
+                      "
+                      style={{
+                        backgroundImage: card.wordGradient,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                      }}
+                    >
+                      {card.centerWord}
+                    </h3>
+                  </div>
+
+                  {/* 8. Bottom-Right Frosted Translucent Info Box (Exact match to inrootdesign.com cards) */}
+                  <div
+                    className="
+                      absolute bottom-5 right-5 left-5 sm:left-[26%]
+                      z-20 rounded-[12px] p-4 sm:p-5
+                      backdrop-blur-md border border-[#FDFBD4]/20
+                      text-[#FDFBD4] shadow-[0_12px_32px_rgba(0,0,0,0.34)]
+                      transition-transform duration-500 ease-out
+                      group-hover:-translate-y-1
+                    "
+                    style={{ background: card.boxTint }}
+                  >
+                    <p className="text-[11.5px] sm:text-[12.5px] leading-[1.48] text-[#FDFBD4]/95 font-normal mb-3">
+                      {card.description}
+                    </p>
+
+                    <ul className="space-y-0.5 text-[11px] sm:text-[12px] leading-[1.42] text-[#FDFBD4]/90">
+                      {card.bullets.map((bullet, bIdx) => (
+                        <li key={bIdx} className="flex items-start gap-1.5">
+                          <span aria-hidden="true">-</span>
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-2.5 pt-2 border-t border-[#FDFBD4]/15 flex items-center justify-between text-[10px] font-mono tracking-wider uppercase text-[#D9D7B6]">
+                      <span>{card.tools}</span>
+                      <span>Step {card.number}</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Bottom Step Navigation Bar (Allows both scroll progress tracking & one-click jump to any card) */}
+        <div className="w-full max-w-[1140px] px-5 sm:px-8 flex items-center justify-between gap-4 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-5 overflow-x-auto no-scrollbar py-1">
+            {INROOT_PROCESS_CARDS.map((card, idx) => {
+              const isCurrent = activeStepIndex === idx;
+              return (
+                <button
+                  key={card.number}
+                  type="button"
+                  onClick={() => scrollToCardIndex(idx)}
+                  className={`
+                    text-xs font-mono uppercase tracking-wider whitespace-nowrap
+                    transition-colors duration-200 cursor-pointer py-1
+                    ${
+                      isCurrent
+                        ? 'text-[#18383C] font-semibold border-b-2 border-[#18383C]'
+                        : 'text-[#878672] hover:text-[#545333]'
+                    }
+                  `}
+                >
+                  {card.number} · {card.centerWord}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => scrollToCardIndex(Math.max(0, activeStepIndex - 1))}
+              disabled={activeStepIndex === 0}
+              aria-label="Previous process step"
+              className="
+                w-9 h-9 flex items-center justify-center
+                border border-[#878672]/50 text-[#18383C]
+                hover:bg-[#18383C] hover:text-[#FDFBD4]
+                disabled:opacity-30 disabled:pointer-events-none
+                transition-colors cursor-pointer
+              "
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                scrollToCardIndex(Math.min(INROOT_PROCESS_CARDS.length - 1, activeStepIndex + 1))
+              }
+              disabled={activeStepIndex === INROOT_PROCESS_CARDS.length - 1}
+              aria-label="Next process step"
+              className="
+                w-9 h-9 flex items-center justify-center
+                border border-[#878672]/50 text-[#18383C]
+                hover:bg-[#18383C] hover:text-[#FDFBD4]
+                disabled:opacity-30 disabled:pointer-events-none
+                transition-colors cursor-pointer
+              "
+            >
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

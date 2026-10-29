@@ -1,0 +1,15 @@
+node_modules
+node_modules/
+dist
+dist/
+.aistudio
+.aistudio/
+build/
+coverage/
+.DS_Store
+*.log
+bun.lock
+package-lock.json
+.env*
+!.env.example
+
