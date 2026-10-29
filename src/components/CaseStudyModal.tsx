@@ -229,7 +229,7 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({
             const isFullBleedPhotoSlide =
               /behance-lumera-fs-(03|04|08|09)\.jpg$/.test(slide.imageUrl) ||
               /behance-roast-fs-11[abc]\.jpg$/.test(slide.imageUrl) ||
-              /behance-riwaq-01\.png$/.test(slide.imageUrl);
+              /behance-riwaq-01\.(png|jpg)$/.test(slide.imageUrl);
 
             return (
               <section
@@ -244,6 +244,8 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({
                 <img
                   src={slide.imageUrl}
                   alt={slide.title}
+                  loading="eager"
+                  decoding="async"
                   className={`h-svh w-screen ${
                     isBehanceCoverSlide
                       ? 'object-cover object-center transition-transform duration-[1.6s] ease-out group-hover:scale-[1.035]'

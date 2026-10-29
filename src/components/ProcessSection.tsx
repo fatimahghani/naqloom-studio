@@ -140,13 +140,15 @@ const INROOT_PROCESS_CARDS: InrootProcessCard[] = [
   },
 ];
 
-// Immediately begin preloading all process images at module evaluation time so they are decoded in cache before scroll
+// Preload process images after critical above-the-fold hero & poster assets have started loading
 if (typeof window !== 'undefined') {
-  INROOT_PROCESS_CARDS.forEach((card) => {
-    const img = new Image();
-    img.decoding = 'async';
-    img.src = card.imageUrl;
-  });
+  setTimeout(() => {
+    INROOT_PROCESS_CARDS.forEach((card) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = card.imageUrl;
+    });
+  }, 800);
 }
 
 /**
@@ -329,11 +331,11 @@ export const ProcessSection: React.FC = () => {
                 >
                   {/* 0. Instant Local Sunlit Studio Base Layer (Zero network delay, prevents any dark flash) */}
                   <img
-                    src="/assets/aistudio/retro_design_studio_poster.jpg"
+                    src={`${import.meta.env.BASE_URL}assets/aistudio/retro_design_studio_poster.jpg`}
                     alt=""
                     aria-hidden="true"
                     loading="eager"
-                    decoding="sync"
+                    decoding="async"
                     style={{ objectPosition: card.courtyardCropPosition }}
                     className="
                       absolute inset-0 w-full h-full object-cover
@@ -347,7 +349,6 @@ export const ProcessSection: React.FC = () => {
                     alt={`${card.centerWord} — ${card.subtitle}`}
                     loading="eager"
                     decoding="async"
-                    fetchPriority="high"
                     style={{ filter: 'sepia(0.22) contrast(1.05) brightness(1.04) saturate(1.14)' }}
                     className="
                       absolute inset-0 w-full h-full object-cover object-center
@@ -358,7 +359,7 @@ export const ProcessSection: React.FC = () => {
 
                   {/* 1B. Blended Main-Page Retro Studio Light & Grain Texture Layer */}
                   <img
-                    src="/assets/aistudio/retro_design_studio_poster.jpg"
+                    src={`${import.meta.env.BASE_URL}assets/aistudio/retro_design_studio_poster.jpg`}
                     alt=""
                     aria-hidden="true"
                     loading="eager"

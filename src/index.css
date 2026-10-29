@@ -40,20 +40,114 @@
   }
 }
 
+@keyframes ae-letter-boil {
+  0%, 100% {
+    transform: translate3d(0px, 0px, 0) rotate(var(--letter-rot, 0deg)) scale(1, 1);
+  }
+  25% {
+    transform: translate3d(-0.8px, 0.9px, 0) rotate(calc(var(--letter-rot, 0deg) - 0.6deg)) scale(1.005, 0.995);
+  }
+  50% {
+    transform: translate3d(0.9px, -0.8px, 0) rotate(calc(var(--letter-rot, 0deg) + 0.5deg)) scale(0.995, 1.006);
+  }
+  75% {
+    transform: translate3d(-0.5px, -0.9px, 0) rotate(calc(var(--letter-rot, 0deg) + 0.7deg)) scale(1.006, 0.994);
+  }
+}
+
+@keyframes ae-fill-boil {
+  0%, 100% {
+    transform: translate3d(var(--fill-ox, -4px), var(--fill-oy, 4px), 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(calc(var(--fill-ox, -4px) + 1.1px), calc(var(--fill-oy, 4px) - 0.9px), 0) rotate(-0.4deg);
+  }
+  66% {
+    transform: translate3d(calc(var(--fill-ox, -4px) - 1.0px), calc(var(--fill-oy, 4px) + 1.0px), 0) rotate(0.4deg);
+  }
+}
+
+@keyframes ae-stroke-boil-a {
+  0%, 100% {
+    transform: translate3d(-2.0px, -1.5px, 0) rotate(-0.6deg) scale(1.006, 0.994);
+  }
+  25% {
+    transform: translate3d(1.6px, -1.8px, 0) rotate(0.6deg) scale(0.994, 1.008);
+  }
+  50% {
+    transform: translate3d(-2.1px, 1.4px, 0) rotate(-0.8deg) scale(1.008, 0.992);
+  }
+  75% {
+    transform: translate3d(1.4px, 1.6px, 0) rotate(0.5deg) scale(0.993, 1.007);
+  }
+}
+
+@keyframes ae-stroke-boil-b {
+  0%, 100% {
+    transform: translate3d(2.1px, 1.6px, 0) rotate(0.7deg) scale(0.994, 1.007);
+  }
+  25% {
+    transform: translate3d(-1.7px, 1.9px, 0) rotate(-0.7deg) scale(1.008, 0.993);
+  }
+  50% {
+    transform: translate3d(2.0px, -1.4px, 0) rotate(0.8deg) scale(0.992, 1.008);
+  }
+  75% {
+    transform: translate3d(-1.5px, -1.6px, 0) rotate(-0.6deg) scale(1.006, 0.994);
+  }
+}
+
+@keyframes ae-stroke-boil-c {
+  0%, 100% {
+    transform: translate3d(-1.3px, 1.8px, 0) rotate(0.5deg) scale(1.005, 0.996);
+  }
+  33% {
+    transform: translate3d(1.4px, -1.3px, 0) rotate(-0.6deg) scale(0.995, 1.006);
+  }
+  66% {
+    transform: translate3d(-1.6px, -1.4px, 0) rotate(0.7deg) scale(1.006, 0.994);
+  }
+}
+
+.animate-hero-letter {
+  animation: ae-letter-boil 2.2s steps(1, end) infinite !important;
+  animation-delay: var(--boil-delay, 0s) !important;
+  animation-play-state: running !important;
+  will-change: transform;
+}
+
+.animate-ae-fill {
+  animation: ae-fill-boil 1.95s steps(1, end) infinite !important;
+  animation-delay: var(--boil-delay, 0s) !important;
+  animation-play-state: running !important;
+}
+
+.animate-ae-stroke-a {
+  animation: ae-stroke-boil-a 1.8s steps(1, end) infinite !important;
+  animation-delay: var(--boil-delay, 0s) !important;
+  animation-play-state: running !important;
+}
+
+.animate-ae-stroke-b {
+  animation: ae-stroke-boil-b 2.1s steps(1, end) infinite !important;
+  animation-delay: var(--boil-delay, 0s) !important;
+  animation-play-state: running !important;
+}
+
+.animate-ae-stroke-c {
+  animation: ae-stroke-boil-c 2.4s steps(1, end) infinite !important;
+  animation-delay: var(--boil-delay, 0s) !important;
+  animation-play-state: running !important;
+}
+
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 34s linear infinite;
-}
-
-.animate-marquee:hover {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-marquee {
-    animation: none;
-  }
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  animation: marquee-scroll 34s linear infinite !important;
+  animation-play-state: running !important;
 }
 
 /* Lens Bloom Poster Section Styles */

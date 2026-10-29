@@ -147,7 +147,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onContactClick }) =>
                 <img
                   src={`${import.meta.env.BASE_URL}ref-pinterest.jpg`}
                   alt="Overhead illustration of Fatimah Ghani working at her design desk with laptop, coffee, sketchbook, and studio lamp"
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   style={{
                     filter: 'url(#naqloom-sketch-grade) contrast(1.06)',
@@ -160,6 +161,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onContactClick }) =>
                   src={`${import.meta.env.BASE_URL}ref-pinterest.jpg`}
                   alt=""
                   aria-hidden="true"
+                  loading="eager"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   style={{
                     filter: 'sepia(0.85) saturate(2.2) hue-rotate(-18deg) brightness(1.02)',

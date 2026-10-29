@@ -25,7 +25,7 @@ const BASE_URL = import.meta.env.BASE_URL;
 
 export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
   {
-    src: `${BASE_URL}assets/aistudio/Trying_New_Things__A_Designer_s_Collage_a361d455.png`,
+    src: `${BASE_URL}assets/aistudio/Trying_New_Things__A_Designer_s_Collage_a361d455.jpg`,
     roman: 'I',
     name: 'Trying New Things',
     project: 'Mixed Media · Designer Manifesto',
@@ -34,7 +34,7 @@ export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
     aspect: 0.8,
   },
   {
-    src: `${BASE_URL}assets/aistudio/shnakht_449796d0.png`,
+    src: `${BASE_URL}assets/aistudio/shnakht_449796d0.jpg`,
     roman: 'II',
     name: 'Shanakht (شناخت)',
     project: 'Cultural Identity · Urdu Typography',
@@ -43,7 +43,7 @@ export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
     aspect: 0.71,
   },
   {
-    src: `${BASE_URL}assets/aistudio/wajood_ac0f25c9.png`,
+    src: `${BASE_URL}assets/aistudio/wajood_ac0f25c9.jpg`,
     roman: 'III',
     name: 'Wajood (وجود)',
     project: 'Poetic Editorial · Halftone Print',
@@ -52,7 +52,7 @@ export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
     aspect: 0.71,
   },
   {
-    src: `${BASE_URL}assets/aistudio/chai..._7ec612bc.png`,
+    src: `${BASE_URL}assets/aistudio/chai..._7ec612bc.jpg`,
     roman: 'IV',
     name: 'Chai — Ishq Kya Hai?',
     project: 'Cultural Ritual · Calligraphic Poster',
@@ -61,7 +61,7 @@ export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
     aspect: 0.71,
   },
   {
-    src: `${BASE_URL}assets/aistudio/chill_and_mix_d3fa2d26.png`,
+    src: `${BASE_URL}assets/aistudio/chill_and_mix_d3fa2d26.jpg`,
     roman: 'V',
     name: 'Chill & Mix',
     project: 'Event & Music · Visual Direction',
@@ -70,7 +70,7 @@ export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
     aspect: 0.8,
   },
   {
-    src: `${BASE_URL}assets/aistudio/new_pic_4c93e253.png`,
+    src: `${BASE_URL}assets/aistudio/new_pic_4c93e253.jpg`,
     roman: 'VI',
     name: 'Retro Horizon',
     project: 'Vector Illustration · Synthwave Print',
@@ -79,7 +79,7 @@ export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
     aspect: 1.0,
   },
   {
-    src: `${BASE_URL}assets/aistudio/birthday_eeadee85.png`,
+    src: `${BASE_URL}assets/aistudio/birthday_eeadee85.jpg`,
     roman: 'VII',
     name: 'Tehreem · 03 March',
     project: 'Editorial Portrait · Archway Print',
@@ -88,7 +88,7 @@ export const LENS_BLOOM_POSTERS: LensBloomPosterCard[] = [
     aspect: 0.8,
   },
   {
-    src: `${BASE_URL}assets/aistudio/Group_6cd15385.png`,
+    src: `${BASE_URL}assets/aistudio/Group_6cd15385.jpg`,
     roman: 'VIII',
     name: 'Reality · Vol. 01',
     project: 'Kinetic Typography · Conceptual Poster',
@@ -248,14 +248,6 @@ export const PosterSection: React.FC = () => {
     };
 
     const startIntroAnimation = (now: number) => {
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reducedMotion) {
-        o = 1;
-        P = 1;
-        if (hintRef.current) hintRef.current.style.opacity = '1';
-        wakeUp();
-        return;
-      }
       introStartTime = now;
       introActive = true;
       o = 0;

@@ -110,10 +110,6 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
     }
   }, []);
 
-  const strokeJitterA = { x: -2.0, y: -1.5, r: -0.6 };
-  const strokeJitterB = { x: 2.2, y: 1.8, r: 0.7 };
-  const strokeJitterC = { x: -1.4, y: 2.0, r: 0.5 };
-
   const renderHandDrawnLetter = (
     item: { char: string; rot: number; ox: number; oy: number },
     idx: number,
@@ -132,23 +128,27 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
         stiffness: 145,
         damping: 15,
       }}
-      style={{
-        transform: `rotate(${item.rot}deg)`,
-        fontFamily: "'Anton', 'Oswald', sans-serif",
-        fontSize,
-        lineHeight: 0.88,
-      }}
-      className="relative inline-block uppercase tracking-tight"
+      style={
+        {
+          '--letter-rot': `${item.rot}deg`,
+          '--fill-ox': `${item.ox}px`,
+          '--fill-oy': `${item.oy}px`,
+          '--boil-delay': `${(idx * 0.09).toFixed(2)}s`,
+          fontFamily: "'Anton', 'Oswald', sans-serif",
+          fontSize,
+          lineHeight: 0.88,
+        } as React.CSSProperties
+      }
+      className="animate-hero-letter relative inline-block uppercase tracking-tight"
     >
       {/* 1. Misregistered Solid Fill Block (Warm Cream #FDFBD4 with Deep Teal #18383C shadow) */}
       <span
         style={{
-          transform: `translate(${item.ox}px, ${item.oy}px)`,
           color: '#FDFBD4',
-          filter: 'url(#ae-hand-drawn-fill)',
           textShadow: '4px 5px 0px #18383C, 0px 8px 22px rgba(24, 56, 60, 0.55)',
+          filter: 'url(#ae-hand-drawn-fill)',
         }}
-        className="block select-none"
+        className="animate-ae-fill block select-none"
       >
         {item.char}
       </span>
@@ -157,12 +157,11 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
       <span
         aria-hidden="true"
         style={{
-          transform: `translate(${strokeJitterA.x}px, ${strokeJitterA.y}px) rotate(${strokeJitterA.r}deg)`,
-          WebkitTextStroke: '3.5px #18383C',
+          WebkitTextStroke: '3.6px #18383C',
           color: 'transparent',
           filter: 'url(#ae-hand-drawn-1)',
         }}
-        className="pointer-events-none absolute inset-0 block"
+        className="animate-ae-stroke-a pointer-events-none absolute inset-0 block"
       >
         {item.char}
       </span>
@@ -171,12 +170,11 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
       <span
         aria-hidden="true"
         style={{
-          transform: `translate(${strokeJitterB.x}px, ${strokeJitterB.y}px) rotate(${strokeJitterB.r}deg)`,
-          WebkitTextStroke: '2.2px #18383C',
+          WebkitTextStroke: '2.3px #18383C',
           color: 'transparent',
           filter: 'url(#ae-hand-drawn-2)',
         }}
-        className="pointer-events-none absolute inset-0 block"
+        className="animate-ae-stroke-b pointer-events-none absolute inset-0 block"
       >
         {item.char}
       </span>
@@ -185,12 +183,11 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
       <span
         aria-hidden="true"
         style={{
-          transform: `translate(${strokeJitterC.x}px, ${strokeJitterC.y}px) rotate(${strokeJitterC.r}deg)`,
-          WebkitTextStroke: '1.4px #FDFBD4',
+          WebkitTextStroke: '1.5px #FDFBD4',
           color: 'transparent',
           filter: 'url(#ae-hand-drawn-1)',
         }}
-        className="pointer-events-none absolute inset-0 block opacity-85"
+        className="animate-ae-stroke-c pointer-events-none absolute inset-0 block opacity-90"
       >
         {item.char}
       </span>
@@ -377,9 +374,17 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
               type="turbulence"
               baseFrequency="0.022 0.028"
               numOctaves="2"
-              seed={5}
+              seed="5"
               result="noise"
-            />
+            >
+              <animate
+                attributeName="seed"
+                values="5;11;19;27;5"
+                dur="2.0s"
+                calcMode="discrete"
+                repeatCount="indefinite"
+              />
+            </feTurbulence>
             <feDisplacementMap
               in="SourceGraphic"
               in2="noise"
@@ -394,9 +399,17 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
               type="turbulence"
               baseFrequency="0.026 0.022"
               numOctaves="2"
-              seed={14}
+              seed="14"
               result="noise"
-            />
+            >
+              <animate
+                attributeName="seed"
+                values="14;23;7;31;14"
+                dur="2.3s"
+                calcMode="discrete"
+                repeatCount="indefinite"
+              />
+            </feTurbulence>
             <feDisplacementMap
               in="SourceGraphic"
               in2="noise"
@@ -411,9 +424,17 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
               type="fractalNoise"
               baseFrequency="0.016"
               numOctaves="2"
-              seed={3}
+              seed="3"
               result="noise"
-            />
+            >
+              <animate
+                attributeName="seed"
+                values="3;9;17;25;3"
+                dur="2.5s"
+                calcMode="discrete"
+                repeatCount="indefinite"
+              />
+            </feTurbulence>
             <feDisplacementMap
               in="SourceGraphic"
               in2="noise"

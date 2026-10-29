@@ -74,52 +74,52 @@ const PROJECT_SLIDE_IMAGES: Record<string, { url: string; label: string; bgHex?:
       bgHex: '#1C0800',
     },
     {
-      url: `${BASE_URL}behance-riwaq-01.png`,
+      url: `${BASE_URL}behance-riwaq-01.jpg`,
       label: '02 / Collection Showcase',
       bgHex: '#1C0800',
     },
     {
-      url: `${BASE_URL}behance-riwaq-02.png`,
+      url: `${BASE_URL}behance-riwaq-02.jpg`,
       label: '03 / Brand Architecture',
       bgHex: '#F8F5F0',
     },
     {
-      url: `${BASE_URL}behance-riwaq-03.png`,
+      url: `${BASE_URL}behance-riwaq-03.jpg`,
       label: '04 / Brand Palette',
       bgHex: '#F8F5F0',
     },
     {
-      url: `${BASE_URL}behance-riwaq-04.png`,
+      url: `${BASE_URL}behance-riwaq-04.jpg`,
       label: '05 / Scent Moodboards',
       bgHex: '#F8F5F0',
     },
     {
-      url: `${BASE_URL}behance-riwaq-05.png`,
+      url: `${BASE_URL}behance-riwaq-05.jpg`,
       label: '06 / Outer Packaging',
       bgHex: '#1C0800',
     },
     {
-      url: `${BASE_URL}behance-riwaq-06.png`,
+      url: `${BASE_URL}behance-riwaq-06.jpg`,
       label: '07 / Product Lineup',
       bgHex: '#F8F5F0',
     },
     {
-      url: `${BASE_URL}behance-riwaq-07.png`,
+      url: `${BASE_URL}behance-riwaq-07.jpg`,
       label: '08 / Environmental Scene',
       bgHex: '#F8F5F0',
     },
     {
-      url: `${BASE_URL}behance-riwaq-09.png`,
+      url: `${BASE_URL}behance-riwaq-09.jpg`,
       label: '09 / Daily Life Rituals',
       bgHex: '#F4EFE6',
     },
     {
-      url: `${BASE_URL}behance-riwaq-08.png`,
+      url: `${BASE_URL}behance-riwaq-08.jpg`,
       label: '10 / Atmospheric Lifestyle',
       bgHex: '#1C0800',
     },
     {
-      url: `${BASE_URL}behance-riwaq-10.png`,
+      url: `${BASE_URL}behance-riwaq-10.jpg`,
       label: '11 / Closing',
       bgHex: '#1C0800',
     },
@@ -203,7 +203,7 @@ const getSlideFitClass = (url: string): string => {
   if (
     /behance-lumera-fs-(03|04|08|09)\.jpg$/.test(url) ||
     /behance-roast-fs-11[abc]\.jpg$/.test(url) ||
-    /behance-riwaq-01\.png$/.test(url)
+    /behance-riwaq-01\.(png|jpg)$/.test(url)
   ) {
     return 'object-cover object-center';
   }
@@ -224,6 +224,19 @@ const FullScreenProjectSlide: React.FC<{
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const cursorBadgeRef = useRef<HTMLDivElement>(null);
+
+  // Preload adjacent slides so scrubbing through slides is instant
+  React.useEffect(() => {
+    const nextIdx = (activeImageIdx + 1) % gallery.length;
+    const prevIdx = (activeImageIdx - 1 + gallery.length) % gallery.length;
+    [gallery[activeImageIdx], gallery[nextIdx], gallery[prevIdx]].forEach((item) => {
+      if (item?.url) {
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = item.url;
+      }
+    });
+  }, [activeImageIdx, gallery]);
 
   const isBehanceSlideDeck = Boolean(project.behanceUrl);
   const isLumera = project.id === 'lumera-candle-identity';
