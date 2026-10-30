@@ -68,22 +68,22 @@ const HERO_REEL_CARDS: HeroReelCardItem[] = [
 ];
 
 const NAQLOOM_LETTERS = [
-  { char: 'N', rot: -1.4, ox: -5, oy: 4 },
-  { char: 'A', rot: 1.1, ox: 4, oy: -4 },
-  { char: 'Q', rot: -1.0, ox: -4, oy: 4 },
-  { char: 'L', rot: 1.3, ox: 5, oy: 3 },
-  { char: 'O', rot: -1.2, ox: -5, oy: -3 },
-  { char: 'O', rot: 1.0, ox: 4, oy: 4 },
-  { char: 'M', rot: -1.1, ox: -4, oy: 4 },
+  { char: 'N', rot: -1.4, ox: -2.5, oy: 2.0 },
+  { char: 'A', rot: 1.1, ox: 2.0, oy: -2.0 },
+  { char: 'Q', rot: -0.9, ox: -2.0, oy: 2.5 },
+  { char: 'L', rot: 1.5, ox: 2.5, oy: 1.5 },
+  { char: 'O', rot: -1.2, ox: -2.0, oy: -2.0 },
+  { char: 'O', rot: 1.0, ox: 2.0, oy: 2.0 },
+  { char: 'M', rot: -1.3, ox: -2.5, oy: -1.5 },
 ];
 
 const STUDIO_LETTERS = [
-  { char: 'S', rot: 1.2, ox: -4, oy: 4 },
-  { char: 'T', rot: -1.2, ox: 4, oy: -3 },
-  { char: 'U', rot: 1.0, ox: -4, oy: 4 },
-  { char: 'D', rot: -1.3, ox: 4, oy: 4 },
-  { char: 'I', rot: 1.4, ox: -3, oy: -4 },
-  { char: 'O', rot: -1.1, ox: 4, oy: 3 },
+  { char: 'S', rot: 1.2, ox: 2.0, oy: -1.5 },
+  { char: 'T', rot: -1.4, ox: -2.0, oy: 2.0 },
+  { char: 'U', rot: 0.9, ox: 1.5, oy: 2.0 },
+  { char: 'D', rot: -1.1, ox: -2.0, oy: -1.5 },
+  { char: 'I', rot: 1.4, ox: 1.5, oy: 1.5 },
+  { char: 'O', rot: -1.0, ox: -2.0, oy: 2.0 },
 ];
 
 export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
@@ -119,78 +119,82 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
   ) => (
     <motion.div
       key={`${rowPrefix}-${idx}`}
-      initial={{ opacity: 0, scale: 0.78, y: 28 }}
+      initial={{ opacity: 0, scale: 0.82, y: 24 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{
-        delay: baseDelay + idx * 0.08,
-        duration: 0.65,
+        delay: baseDelay + idx * 0.06,
+        duration: 0.55,
         type: 'spring',
-        stiffness: 145,
-        damping: 15,
+        stiffness: 160,
+        damping: 14,
       }}
-      style={
-        {
-          '--letter-rot': `${item.rot}deg`,
-          '--fill-ox': `${item.ox}px`,
-          '--fill-oy': `${item.oy}px`,
-          '--boil-delay': `${(idx * 0.09).toFixed(2)}s`,
-          fontFamily: "'Anton', 'Oswald', sans-serif",
-          fontSize,
-          lineHeight: 0.88,
-        } as React.CSSProperties
-      }
-      className="animate-hero-letter relative inline-block uppercase tracking-tight"
+      className="relative inline-block"
     >
-      {/* 1. Misregistered Solid Fill Block (Warm Cream #FDFBD4 with Deep Teal #18383C shadow) */}
-      <span
-        style={{
-          color: '#FDFBD4',
-          textShadow: '4px 5px 0px #18383C, 0px 8px 22px rgba(24, 56, 60, 0.55)',
-          filter: 'url(#ae-hand-drawn-fill)',
-        }}
-        className="animate-ae-fill block select-none"
+      <div
+        style={
+          {
+            '--letter-rot': `${item.rot}deg`,
+            '--fill-ox': `${item.ox}px`,
+            '--fill-oy': `${item.oy}px`,
+            '--boil-delay': `${(idx * 0.09).toFixed(2)}s`,
+            fontFamily: "'Anton', 'Oswald', sans-serif",
+            fontSize,
+            lineHeight: 0.96,
+          } as React.CSSProperties
+        }
+        className="animate-hero-letter relative inline-block uppercase tracking-[0.03em] px-[0.015em]"
       >
-        {item.char}
-      </span>
+        {/* 1. Primary Solid Fill Layer (Misregistered Offset like AE Tutorial) */}
+        <span
+          style={{
+            color: '#FDFBD4',
+            textShadow: '4px 5px 0px #18383C',
+            filter: 'url(#ae-hand-drawn-fill)',
+          }}
+          className="animate-ae-fill relative z-10 block select-none"
+        >
+          {item.char}
+        </span>
 
-      {/* 2. Hand-Drawn Sketch Outline 1 (Deep Teal #18383C) */}
-      <span
-        aria-hidden="true"
-        style={{
-          WebkitTextStroke: '3.6px #18383C',
-          color: 'transparent',
-          filter: 'url(#ae-hand-drawn-1)',
-        }}
-        className="animate-ae-stroke-a pointer-events-none absolute inset-0 block"
-      >
-        {item.char}
-      </span>
+        {/* 2. Primary Hand-Drawn Sketch Outline (Thick Dark Teal #18383C Boil Line 1) */}
+        <span
+          aria-hidden="true"
+          style={{
+            WebkitTextStroke: '3.6px #18383C',
+            color: 'transparent',
+            filter: 'url(#ae-hand-drawn-1)',
+          }}
+          className="animate-ae-stroke-a pointer-events-none absolute inset-0 z-20 block select-none"
+        >
+          {item.char}
+        </span>
 
-      {/* 3. Hand-Drawn Sketch Outline 2 (Deep Teal #18383C Second Pass) */}
-      <span
-        aria-hidden="true"
-        style={{
-          WebkitTextStroke: '2.3px #18383C',
-          color: 'transparent',
-          filter: 'url(#ae-hand-drawn-2)',
-        }}
-        className="animate-ae-stroke-b pointer-events-none absolute inset-0 block"
-      >
-        {item.char}
-      </span>
+        {/* 3. Secondary Hand-Drawn Sketch Outline (Offset Dark Teal #18383C Boil Line 2) */}
+        <span
+          aria-hidden="true"
+          style={{
+            WebkitTextStroke: '2.3px #18383C',
+            color: 'transparent',
+            filter: 'url(#ae-hand-drawn-2)',
+          }}
+          className="animate-ae-stroke-b pointer-events-none absolute inset-0 z-20 block select-none opacity-90"
+        >
+          {item.char}
+        </span>
 
-      {/* 4. Hand-Drawn Sketch Outline 3 (Warm Cream #FDFBD4 Fine Counter-Accent Line) */}
-      <span
-        aria-hidden="true"
-        style={{
-          WebkitTextStroke: '1.5px #FDFBD4',
-          color: 'transparent',
-          filter: 'url(#ae-hand-drawn-1)',
-        }}
-        className="animate-ae-stroke-c pointer-events-none absolute inset-0 block opacity-90"
-      >
-        {item.char}
-      </span>
+        {/* 4. Outer Cream Chalk/Pencil Accent Line (Matches Reference Light Sketch Pass) */}
+        <span
+          aria-hidden="true"
+          style={{
+            WebkitTextStroke: '1.4px rgba(253, 251, 212, 0.78)',
+            color: 'transparent',
+            filter: 'url(#ae-hand-drawn-2)',
+          }}
+          className="animate-ae-stroke-c pointer-events-none absolute inset-0 z-30 block select-none"
+        >
+          {item.char}
+        </span>
+      </div>
     </motion.div>
   );
 
@@ -369,10 +373,10 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
             })}
           </mask>
 
-          <filter id="ae-hand-drawn-1" x="-15%" y="-15%" width="130%" height="130%">
+          <filter id="ae-hand-drawn-1" x="-35%" y="-35%" width="170%" height="170%">
             <feTurbulence
               type="turbulence"
-              baseFrequency="0.022 0.028"
+              baseFrequency="0.02 0.025"
               numOctaves="2"
               seed="5"
               result="noise"
@@ -380,7 +384,7 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
               <animate
                 attributeName="seed"
                 values="5;11;19;27;5"
-                dur="2.0s"
+                dur="1.8s"
                 calcMode="discrete"
                 repeatCount="indefinite"
               />
@@ -388,16 +392,16 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
             <feDisplacementMap
               in="SourceGraphic"
               in2="noise"
-              scale="3.8"
+              scale="2.8"
               xChannelSelector="R"
               yChannelSelector="G"
             />
           </filter>
 
-          <filter id="ae-hand-drawn-2" x="-15%" y="-15%" width="130%" height="130%">
+          <filter id="ae-hand-drawn-2" x="-35%" y="-35%" width="170%" height="170%">
             <feTurbulence
               type="turbulence"
-              baseFrequency="0.026 0.022"
+              baseFrequency="0.024 0.02"
               numOctaves="2"
               seed="14"
               result="noise"
@@ -405,7 +409,7 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
               <animate
                 attributeName="seed"
                 values="14;23;7;31;14"
-                dur="2.3s"
+                dur="2.1s"
                 calcMode="discrete"
                 repeatCount="indefinite"
               />
@@ -413,16 +417,16 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
             <feDisplacementMap
               in="SourceGraphic"
               in2="noise"
-              scale="4.2"
+              scale="3.6"
               xChannelSelector="R"
               yChannelSelector="G"
             />
           </filter>
 
-          <filter id="ae-hand-drawn-fill" x="-10%" y="-10%" width="120%" height="120%">
+          <filter id="ae-hand-drawn-fill" x="-35%" y="-35%" width="170%" height="170%">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.016"
+              baseFrequency="0.015"
               numOctaves="2"
               seed="3"
               result="noise"
@@ -430,7 +434,7 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
               <animate
                 attributeName="seed"
                 values="3;9;17;25;3"
-                dur="2.5s"
+                dur="2.4s"
                 calcMode="discrete"
                 repeatCount="indefinite"
               />
@@ -438,7 +442,7 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
             <feDisplacementMap
               in="SourceGraphic"
               in2="noise"
-              scale="2.4"
+              scale="2.2"
               xChannelSelector="R"
               yChannelSelector="G"
             />
@@ -516,14 +520,14 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
         {/* ROW 1: "NAQLOOM" */}
         <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-2.5">
           {NAQLOOM_LETTERS.map((item, idx) =>
-            renderHandDrawnLetter(item, idx, 'naqloom', 0, 'clamp(4.2rem, 13.5vw, 11.2rem)')
+            renderHandDrawnLetter(item, idx, 'naqloom', 0, 'clamp(4.2rem, 13vw, 10.8rem)')
           )}
         </div>
 
         {/* ROW 2: "STUDIO" */}
-        <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3 mt-2 sm:mt-3">
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3.5 -mt-1 sm:-mt-2">
           {STUDIO_LETTERS.map((item, idx) =>
-            renderHandDrawnLetter(item, idx, 'studio', 0.42, 'clamp(3.1rem, 9.8vw, 7.8rem)')
+            renderHandDrawnLetter(item, idx, 'studio', 0.35, 'clamp(3.1rem, 9.5vw, 7.6rem)')
           )}
         </div>
       </div>

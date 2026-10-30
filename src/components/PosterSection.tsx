@@ -385,6 +385,7 @@ export const PosterSection: React.FC = () => {
     const resizeObserver = new ResizeObserver(() => eh());
     resizeObserver.observe(t);
     eh();
+    document.fonts?.ready.then(() => eh());
 
     let hasTriggeredIntro = false;
     const intersectionObserver = new IntersectionObserver(

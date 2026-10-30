@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   PORTFOLIO_PROJECTS,
   ProjectDiscipline,
@@ -16,6 +17,8 @@ import { PosterSection } from './components/PosterSection';
 import { AboutSection } from './components/AboutSection';
 import { ServicesSection } from './components/ServicesSection';
 
+type NavSectionId = 'home' | 'project' | 'about' | 'services' | 'posters' | 'process' | 'contact-form';
+
 export default function App() {
   const [activeNav, setActiveNav] = useState<'home' | 'project' | 'about' | 'services'>('home');
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
@@ -26,10 +29,43 @@ export default function App() {
   const [projectNotes, setProjectNotes] = useState<string>('');
   const [inquirySubmitted, setInquirySubmitted] = useState<boolean>(false);
 
+  // Quick retro glow transition state when clicking any section from the top header
+  const [activeTransitionKey, setActiveTransitionKey] = useState<number | null>(null);
+  const [revealedSection, setRevealedSection] = useState<{
+    id: string;
+    key: number;
+  } | null>(null);
+  const transitionTimersRef = useRef<number[]>([]);
+
+  const clearTransitionTimers = useCallback(() => {
+    transitionTimersRef.current.forEach((timerId) => window.clearTimeout(timerId));
+    transitionTimersRef.current = [];
+  }, []);
+
+  useEffect(() => {
+    return () => clearTransitionTimers();
+  }, [clearTransitionTimers]);
+
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
       setShowFloatingHeader(y > window.innerHeight * 0.65);
+
+      // Keep active top-header indicator synced with scroll position
+      const sections: Array<{ id: 'home' | 'project' | 'about' | 'services'; el: HTMLElement | null }> = [
+        { id: 'home', el: document.getElementById('home') },
+        { id: 'project', el: document.getElementById('project') },
+        { id: 'about', el: document.getElementById('about') },
+        { id: 'services', el: document.getElementById('services') },
+      ];
+      const viewportMid = window.scrollY + window.innerHeight * 0.38;
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const item = sections[i];
+        if (item.el && item.el.offsetTop <= viewportMid) {
+          setActiveNav(item.id);
+          break;
+        }
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -55,12 +91,52 @@ export default function App() {
     setSelectedProjectId(PORTFOLIO_PROJECTS[prevIdx].id);
   };
 
+  const scrollToSection = useCallback(
+    (sectionId: NavSectionId) => {
+      if (
+        sectionId === 'home' ||
+        sectionId === 'project' ||
+        sectionId === 'about' ||
+        sectionId === 'services'
+      ) {
+        setActiveNav(sectionId);
+      } else if (sectionId === 'contact-form') {
+        setActiveNav('services');
+      }
+
+      clearTransitionTimers();
+      const transitionKey = Date.now();
+      setActiveTransitionKey(transitionKey);
+
+      // Snap to target section immediately as the center-outward reveal begins
+      const scrollTimer = window.setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top, behavior: 'auto' });
+        }
+        const wrapperId = sectionId === 'contact-form' ? 'services' : sectionId;
+        setRevealedSection({ id: wrapperId, key: transitionKey });
+      }, 16);
+
+      // Clear overlay right after the quick center reveal completes
+      const endTimer = window.setTimeout(() => {
+        setActiveTransitionKey(null);
+      }, 310);
+
+      const clearRevealTimer = window.setTimeout(() => {
+        setRevealedSection(null);
+      }, 420);
+
+      transitionTimersRef.current.push(scrollTimer, endTimer, clearRevealTimer);
+    },
+    [clearTransitionTimers]
+  );
+
   const handleSelectScopeFromModal = (discipline: ProjectDiscipline, projectTitle: string) => {
     setSelectedProjectId(null);
     setProjectNotes(`Inquiring about a ${discipline} project similar to "${projectTitle}".`);
-    setActiveNav('services');
-    const contactEl = document.getElementById('contact-form');
-    contactEl?.scrollIntoView({ behavior: 'smooth' });
+    scrollToSection('contact-form');
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -69,16 +145,67 @@ export default function App() {
     setInquirySubmitted(true);
   };
 
-  const scrollToSection = (sectionId: 'home' | 'project' | 'about' | 'services' | 'posters' | 'process') => {
-    if (sectionId === 'home' || sectionId === 'project' || sectionId === 'about' || sectionId === 'services') {
-      setActiveNav(sectionId);
-    }
-    const el = document.getElementById(sectionId);
-    el?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <div className="min-h-screen bg-[#FDFBD4] text-[#18383C] flex flex-col selection:bg-[#18383C] selection:text-[#FDFBD4]">
+      {/* QUICK CENTER-OUTWARD REVEALING VINTAGE GRAINY GLOW TRANSITION (NO TEXT, NO GRAPHICS) */}
+      <AnimatePresence mode="wait">
+        {activeTransitionKey !== null && (
+          <motion.div
+            key={activeTransitionKey}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1, ease: 'easeOut' }}
+            className="fixed inset-0 z-[950] pointer-events-none flex items-center justify-center overflow-hidden"
+            aria-hidden="true"
+          >
+            {/* Expanding Center Reveal Aperture: transparent inside, warm glowing rim, vintage curtain outside */}
+            <motion.div
+              initial={{ scale: 0.02 }}
+              animate={{ scale: 2.45 }}
+              exit={{ scale: 2.75, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute w-[75vmax] h-[75vmax] rounded-full"
+              style={{
+                background:
+                  'radial-gradient(circle at 50% 50%, rgba(253, 251, 212, 0) 0%, rgba(253, 251, 212, 0) 42%, rgba(253, 251, 212, 0.88) 58%, rgba(217, 215, 182, 0.78) 68%, rgba(217, 155, 60, 0.55) 78%, rgba(18, 38, 41, 0.94) 92%, rgba(18, 38, 41, 0.98) 100%)',
+                boxShadow: '0 0 0 160vmax rgba(18, 38, 41, 0.96)',
+                filter: 'blur(8px)',
+              }}
+            />
+
+            {/* Outward-Moving Warm Cream & Amber Flash Wave from Center */}
+            <motion.div
+              initial={{ scale: 0.08, opacity: 0.95 }}
+              animate={{ scale: 2.2, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute w-[70vmax] h-[70vmax] rounded-full"
+              style={{
+                background:
+                  'radial-gradient(circle at 50% 50%, rgba(253, 251, 212, 0.95) 0%, rgba(253, 251, 212, 0.65) 38%, rgba(217, 155, 60, 0.35) 68%, rgba(18, 38, 41, 0) 100%)',
+                filter: 'blur(10px)',
+              }}
+            />
+
+            {/* Fine Analog 35mm Film Grain Sweeping Outward with the Reveal */}
+            <motion.div
+              initial={{ opacity: 0.9 }}
+              animate={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="retro-grain-layer mix-blend-overlay"
+            />
+
+            {/* Coarse Vintage Halide Speckle & Dust Grain Layer */}
+            <motion.div
+              initial={{ opacity: 0.65 }}
+              animate={{ opacity: 0 }}
+              transition={{ duration: 0.28, ease: 'easeOut' }}
+              className="retro-grain-layer-coarse mix-blend-multiply"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* PERSISTENT ARCHITECTURAL STUDIO HEADER ON SCROLL */}
       <header
         aria-label="Site header"
@@ -106,33 +233,41 @@ export default function App() {
             </button>
 
             {/* Center Editorial Section Index */}
-            <nav aria-label="Floating navigation" className="hidden md:flex items-center gap-9">
+            <nav aria-label="Floating navigation" className="hidden md:flex items-center gap-8">
               {(
                 [
+                  { id: 'home', label: 'Home' },
                   { id: 'project', label: 'Selected Work' },
                   { id: 'process', label: 'Process' },
                   { id: 'about', label: 'About' },
+                  { id: 'services', label: 'Services' },
                 ] as const
-              ).map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => scrollToSection(item.id)}
-                  className="group relative py-1 font-sans font-medium text-[11px] tracking-[0.18em] uppercase text-[#FDFBD4]/85 hover:text-[#FDFBD4] transition-colors cursor-pointer"
-                >
-                  <span>{item.label}</span>
-                  <span className="absolute inset-x-0 -bottom-0.5 h-px bg-[#FDFBD4] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
-                </button>
-              ))}
+              ).map((item) => {
+                const isCurrent = activeNav === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => scrollToSection(item.id)}
+                    className={`group relative py-1 font-sans font-medium text-[11px] tracking-[0.18em] uppercase transition-colors cursor-pointer ${
+                      isCurrent ? 'text-[#FDFBD4]' : 'text-[#FDFBD4]/75 hover:text-[#FDFBD4]'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    <span
+                      className={`absolute inset-x-0 -bottom-0.5 h-px bg-[#FDFBD4] transition-transform origin-left duration-300 ${
+                        isCurrent ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                      }`}
+                    />
+                  </button>
+                );
+              })}
             </nav>
 
             {/* Right Studio Inquiry Action */}
             <button
               type="button"
-              onClick={() => {
-                const contactEl = document.getElementById('contact-form');
-                contactEl?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => scrollToSection('contact-form')}
               className="group inline-flex items-center gap-2 px-4 py-2 bg-[#FDFBD4] text-[#122629] hover:bg-[#D9D7B6] transition-colors cursor-pointer"
             >
               <span className="font-sans font-semibold text-[10px] sm:text-[11px] uppercase tracking-[0.2em]">
@@ -148,20 +283,21 @@ export default function App() {
 
       <main className="flex-1">
         {/* 1. HOME SECTION — FULL-SCREEN RETRO DESIGN STUDIO + IN-PICTURE TOP NAV + HAND-DRAWN TITLE + ROLLING REEL */}
-        <div id="home">
+        <div
+          id="home"
+          className={revealedSection?.id === 'home' ? 'section-reveal-active' : undefined}
+        >
           <ReadingNookHero
             activeNav={activeNav}
             onSelectNav={(section) => scrollToSection(section)}
-            onEmailClick={() => {
-              setActiveNav('services');
-              const contactEl = document.getElementById('contact-form');
-              contactEl?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onEmailClick={() => scrollToSection('contact-form')}
           />
         </div>
 
         {/* 2. POSTER SECTION (01 · POSTER ARCHIVE) — SEAMLESSLY MELTS OUT OF HERO */}
-        <PosterSection />
+        <div className={revealedSection?.id === 'posters' ? 'section-reveal-active' : undefined}>
+          <PosterSection />
+        </div>
 
         {/* SEAMLESS ATMOSPHERIC EDITORIAL BRIDGE BETWEEN POSTER ARCHIVE (#122629) & SELECTED CASE STUDIES (#24110E) */}
         <section
@@ -224,31 +360,34 @@ export default function App() {
         </section>
 
         {/* 3. PROJECTS SECTION (02 · SELECTED CASE STUDIES) */}
-        <ProjectsSection onSelectProject={(id) => setSelectedProjectId(id)} />
+        <div className={revealedSection?.id === 'project' ? 'section-reveal-active' : undefined}>
+          <ProjectsSection onSelectProject={(id) => setSelectedProjectId(id)} />
+        </div>
 
         {/* 4. PROCESS SECTION (03 · THE PROCESS) */}
-        <ProcessSection />
+        <div className={revealedSection?.id === 'process' ? 'section-reveal-active' : undefined}>
+          <ProcessSection />
+        </div>
 
         {/* 5. ABOUT ME SECTION (04 · THE DESIGNER) */}
-        <AboutSection
-          onContactClick={() => {
-            const contactEl = document.getElementById('contact-form');
-            contactEl?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
+        <div className={revealedSection?.id === 'about' ? 'section-reveal-active' : undefined}>
+          <AboutSection onContactClick={() => scrollToSection('contact-form')} />
+        </div>
 
         {/* 6. SERVICES & STUDIO INQUIRY FINALE (05 · CAPABILITIES & 06 · INITIATE A PROJECT) */}
-        <ServicesSection
-          clientName={clientName}
-          setClientName={setClientName}
-          clientEmail={clientEmail}
-          setClientEmail={setClientEmail}
-          projectNotes={projectNotes}
-          setProjectNotes={setProjectNotes}
-          inquirySubmitted={inquirySubmitted}
-          setInquirySubmitted={setInquirySubmitted}
-          onSubmitInquiry={handleFormSubmit}
-        />
+        <div className={revealedSection?.id === 'services' ? 'section-reveal-active' : undefined}>
+          <ServicesSection
+            clientName={clientName}
+            setClientName={setClientName}
+            clientEmail={clientEmail}
+            setClientEmail={setClientEmail}
+            projectNotes={projectNotes}
+            setProjectNotes={setProjectNotes}
+            inquirySubmitted={inquirySubmitted}
+            setInquirySubmitted={setInquirySubmitted}
+            onSubmitInquiry={handleFormSubmit}
+          />
+        </div>
       </main>
 
       <CaseStudyModal
@@ -261,3 +400,4 @@ export default function App() {
     </div>
   );
 }
+

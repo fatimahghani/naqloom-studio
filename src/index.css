@@ -45,97 +45,91 @@
     transform: translate3d(0px, 0px, 0) rotate(var(--letter-rot, 0deg)) scale(1, 1);
   }
   25% {
-    transform: translate3d(-0.8px, 0.9px, 0) rotate(calc(var(--letter-rot, 0deg) - 0.6deg)) scale(1.005, 0.995);
+    transform: translate3d(-1px, 1px, 0) rotate(calc(var(--letter-rot, 0deg) - 0.6deg)) scale(1.006, 0.994);
   }
   50% {
-    transform: translate3d(0.9px, -0.8px, 0) rotate(calc(var(--letter-rot, 0deg) + 0.5deg)) scale(0.995, 1.006);
+    transform: translate3d(1px, -1px, 0) rotate(calc(var(--letter-rot, 0deg) + 0.5deg)) scale(0.995, 1.006);
   }
   75% {
-    transform: translate3d(-0.5px, -0.9px, 0) rotate(calc(var(--letter-rot, 0deg) + 0.7deg)) scale(1.006, 0.994);
+    transform: translate3d(-0.8px, -0.8px, 0) rotate(calc(var(--letter-rot, 0deg) + 0.7deg)) scale(1.008, 0.992);
   }
 }
 
 @keyframes ae-fill-boil {
   0%, 100% {
-    transform: translate3d(var(--fill-ox, -4px), var(--fill-oy, 4px), 0) rotate(0deg);
+    transform: translate3d(var(--fill-ox, -2px), var(--fill-oy, 2px), 0) rotate(-0.3deg);
   }
   33% {
-    transform: translate3d(calc(var(--fill-ox, -4px) + 1.1px), calc(var(--fill-oy, 4px) - 0.9px), 0) rotate(-0.4deg);
+    transform: translate3d(calc(var(--fill-ox, -2px) + 1.2px), calc(var(--fill-oy, 2px) - 1px), 0) rotate(0.3deg);
   }
   66% {
-    transform: translate3d(calc(var(--fill-ox, -4px) - 1.0px), calc(var(--fill-oy, 4px) + 1.0px), 0) rotate(0.4deg);
+    transform: translate3d(calc(var(--fill-ox, -2px) - 1px), calc(var(--fill-oy, 2px) + 1.2px), 0) rotate(-0.4deg);
   }
 }
 
 @keyframes ae-stroke-boil-a {
   0%, 100% {
-    transform: translate3d(-2.0px, -1.5px, 0) rotate(-0.6deg) scale(1.006, 0.994);
+    transform: translate3d(2px, -1.5px, 0) rotate(0.6deg) scale(1.01, 0.992);
   }
   25% {
-    transform: translate3d(1.6px, -1.8px, 0) rotate(0.6deg) scale(0.994, 1.008);
+    transform: translate3d(-2px, 1.8px, 0) rotate(-0.7deg) scale(0.992, 1.012);
   }
   50% {
-    transform: translate3d(-2.1px, 1.4px, 0) rotate(-0.8deg) scale(1.008, 0.992);
+    transform: translate3d(1.5px, 2px, 0) rotate(0.5deg) scale(1.012, 0.99);
   }
   75% {
-    transform: translate3d(1.4px, 1.6px, 0) rotate(0.5deg) scale(0.993, 1.007);
+    transform: translate3d(-1.5px, -2px, 0) rotate(-0.5deg) scale(0.994, 1.008);
   }
 }
 
 @keyframes ae-stroke-boil-b {
   0%, 100% {
-    transform: translate3d(2.1px, 1.6px, 0) rotate(0.7deg) scale(0.994, 1.007);
+    transform: translate3d(-2.5px, -1.5px, 0) rotate(-0.8deg) scale(0.99, 1.012);
   }
-  25% {
-    transform: translate3d(-1.7px, 1.9px, 0) rotate(-0.7deg) scale(1.008, 0.993);
+  33% {
+    transform: translate3d(2.2px, 1.5px, 0) rotate(0.7deg) scale(1.012, 0.988);
   }
-  50% {
-    transform: translate3d(2.0px, -1.4px, 0) rotate(0.8deg) scale(0.992, 1.008);
-  }
-  75% {
-    transform: translate3d(-1.5px, -1.6px, 0) rotate(-0.6deg) scale(1.006, 0.994);
+  66% {
+    transform: translate3d(-1.8px, 2.2px, 0) rotate(-0.5deg) scale(0.994, 1.01);
   }
 }
 
 @keyframes ae-stroke-boil-c {
   0%, 100% {
-    transform: translate3d(-1.3px, 1.8px, 0) rotate(0.5deg) scale(1.005, 0.996);
+    transform: translate3d(2.8px, -2.2px, 0) rotate(0.5deg) scale(1.014, 0.99);
   }
-  33% {
-    transform: translate3d(1.4px, -1.3px, 0) rotate(-0.6deg) scale(0.995, 1.006);
-  }
-  66% {
-    transform: translate3d(-1.6px, -1.4px, 0) rotate(0.7deg) scale(1.006, 0.994);
+  50% {
+    transform: translate3d(-2.4px, 2.4px, 0) rotate(-0.6deg) scale(0.99, 1.014);
   }
 }
 
 .animate-hero-letter {
-  animation: ae-letter-boil 2.2s steps(1, end) infinite !important;
+  animation: ae-letter-boil 2.2s steps(1, end) infinite both !important;
   animation-delay: var(--boil-delay, 0s) !important;
   animation-play-state: running !important;
   will-change: transform;
 }
 
 .animate-ae-fill {
-  animation: ae-fill-boil 1.95s steps(1, end) infinite !important;
+  animation: ae-fill-boil 1.95s steps(1, end) infinite both !important;
   animation-delay: var(--boil-delay, 0s) !important;
   animation-play-state: running !important;
 }
 
 .animate-ae-stroke-a {
-  animation: ae-stroke-boil-a 1.8s steps(1, end) infinite !important;
+  animation: ae-stroke-boil-a 1.8s steps(1, end) infinite both !important;
   animation-delay: var(--boil-delay, 0s) !important;
   animation-play-state: running !important;
 }
 
 .animate-ae-stroke-b {
-  animation: ae-stroke-boil-b 2.1s steps(1, end) infinite !important;
+  animation: ae-stroke-boil-b 2.1s steps(1, end) infinite both !important;
   animation-delay: var(--boil-delay, 0s) !important;
   animation-play-state: running !important;
 }
 
 .animate-ae-stroke-c {
-  animation: ae-stroke-boil-c 2.4s steps(1, end) infinite !important;
+  animation: ae-stroke-boil-c 2.3s steps(1, end) infinite both !important;
   animation-delay: var(--boil-delay, 0s) !important;
   animation-play-state: running !important;
 }
@@ -146,9 +140,101 @@
   will-change: transform;
   backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
-  animation: marquee-scroll 34s linear infinite !important;
+  animation: marquee-scroll 52s linear infinite !important;
   animation-play-state: running !important;
 }
+
+@keyframes retro-grain-jitter {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  15% {
+    transform: translate3d(-3%, 2%, 0);
+  }
+  30% {
+    transform: translate3d(2%, -3%, 0);
+  }
+  45% {
+    transform: translate3d(-4%, -2%, 0);
+  }
+  60% {
+    transform: translate3d(3%, 4%, 0);
+  }
+  75% {
+    transform: translate3d(-2%, 3%, 0);
+  }
+  90% {
+    transform: translate3d(4%, -1%, 0);
+  }
+}
+
+@keyframes retro-exposure-flicker {
+  0% {
+    opacity: 0.85;
+  }
+  35% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 0.78;
+  }
+  100% {
+    opacity: 0.92;
+  }
+}
+
+.retro-grain-layer {
+  position: absolute;
+  inset: -25%;
+  width: 150%;
+  height: 150%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='vintageGrain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0.96 0 0 0 0  0.82 0 0 0 0  0 0 0 0.72 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23vintageGrain)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  animation: retro-grain-jitter 0.24s steps(1, end) infinite;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.retro-grain-layer-coarse {
+  position: absolute;
+  inset: -25%;
+  width: 150%;
+  height: 150%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='coarseSpeckle'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.52' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='discrete' tableValues='0 0 0 0.35 0.65'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23coarseSpeckle)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 210px 210px;
+  animation: retro-grain-jitter 0.19s steps(1, end) infinite reverse, retro-exposure-flicker 0.16s steps(2, end) infinite;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+@keyframes section-transition-reveal {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.965);
+    clip-path: circle(10% at 50% 50%);
+    filter: sepia(0.45) brightness(1.28) contrast(1.12);
+  }
+  65% {
+    opacity: 1;
+    clip-path: circle(115% at 50% 50%);
+    filter: sepia(0.14) brightness(1.06) contrast(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    clip-path: circle(150% at 50% 50%);
+    filter: sepia(0) brightness(1) contrast(1);
+  }
+}
+
+.section-reveal-active {
+  animation: section-transition-reveal 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: center center;
+  will-change: transform, opacity, filter, clip-path;
+}
+
 
 /* Lens Bloom Poster Section Styles */
 [data-lens-bloom] {
