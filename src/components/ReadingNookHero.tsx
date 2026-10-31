@@ -260,18 +260,18 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
           mask: 'url(#ticket-stamp-mask)',
           WebkitMask: 'url(#ticket-stamp-mask)',
         }}
-        className={`group relative w-[295px] sm:w-[340px] md:w-[380px] h-[176px] sm:h-[190px] md:h-[202px] shrink-0 px-6 py-5 flex flex-col justify-between transition-transform duration-200 hover:scale-[1.015] text-left cursor-pointer overflow-hidden ${containerClasses}`}
+        className={`group relative w-[232px] sm:w-[340px] md:w-[380px] h-[144px] sm:h-[190px] md:h-[202px] shrink-0 px-4 sm:px-6 py-3.5 sm:py-5 flex flex-col justify-between transition-transform duration-200 hover:scale-[1.015] text-left cursor-pointer overflow-hidden ${containerClasses}`}
       >
         {/* Top Monospace Label Row + Thin Divider Line */}
         <div
-          className={`flex items-center justify-between border-b pb-2 text-[11px] font-mono tracking-wider uppercase tabular-nums ${dividerClasses} ${labelClasses}`}
+          className={`flex items-center justify-between border-b pb-1.5 sm:pb-2 text-[10px] sm:text-[11px] font-mono tracking-wider uppercase tabular-nums ${dividerClasses} ${labelClasses}`}
         >
-          <span>{card.label}</span>
-          <span className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+          <span className="truncate pr-2">{card.label}</span>
+          <span className="flex items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
             {card.kind === 'service' && (
               <>
                 <span>SERVICES</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </>
             )}
             {card.kind === 'toolkit' && <span>STACK</span>}
@@ -280,24 +280,24 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
         </div>
 
         {/* Middle Bold Title & Short Line */}
-        <div className="my-auto py-1.5">
+        <div className="my-auto py-1 sm:py-1.5">
           {card.kind === 'toolkit' ? (
-            <div className="space-y-1">
+            <div className="space-y-0.5 sm:space-y-1">
               <div
-                className={`font-display text-lg sm:text-xl font-semibold leading-snug tracking-tight ${titleClasses}`}
+                className={`font-display text-base sm:text-xl font-semibold leading-snug tracking-tight ${titleClasses}`}
               >
                 {card.title}
               </div>
               {card.subtitle && (
-                <p className={`font-serif italic text-sm sm:text-base ${subtitleClasses}`}>
+                <p className={`font-serif italic text-xs sm:text-base ${subtitleClasses}`}>
                   {card.subtitle}
                 </p>
               )}
             </div>
           ) : card.kind === 'availability' ? (
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-2.5 sm:gap-3">
               <div
-                className={`font-display text-base sm:text-lg font-semibold leading-snug tracking-tight ${titleClasses}`}
+                className={`font-display text-sm sm:text-lg font-semibold leading-snug tracking-tight ${titleClasses}`}
               >
                 {card.title}
               </div>
@@ -307,21 +307,21 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
                   e.stopPropagation();
                   onEmailClick?.();
                 }}
-                className="px-3.5 py-2 rounded-md bg-[#18383C] hover:bg-[#545333] text-[#FDFBD4] text-xs font-sans font-medium tracking-wide transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#18383C] hover:bg-[#545333] text-[#FDFBD4] text-[11px] sm:text-xs font-sans font-medium tracking-wide transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
               >
-                <Mail className="w-3.5 h-3.5" />
+                <Mail className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 <span>Email me</span>
               </button>
             </div>
           ) : (
             <div className="space-y-0.5">
               <div
-                className={`font-display text-xl sm:text-2xl font-semibold leading-tight tracking-tight ${titleClasses}`}
+                className={`font-display text-lg sm:text-2xl font-semibold leading-tight tracking-tight ${titleClasses}`}
               >
                 {card.title}
               </div>
               {card.subtitle && (
-                <p className={`font-serif italic text-base sm:text-[17px] leading-snug ${subtitleClasses}`}>
+                <p className={`font-serif italic text-xs sm:text-[17px] leading-snug line-clamp-1 sm:line-clamp-none ${subtitleClasses}`}>
                   {card.subtitle}
                 </p>
               )}
@@ -331,13 +331,13 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
 
         {/* Bottom Thin Divider Line + Subtle Archival Footer Bar */}
         <div
-          className={`pt-2 border-t flex items-center justify-between text-[10px] font-mono tabular-nums ${dividerClasses} ${labelClasses}`}
+          className={`pt-1.5 sm:pt-2 border-t flex items-center justify-between text-[9px] sm:text-[10px] font-mono tabular-nums ${dividerClasses} ${labelClasses}`}
         >
           <span>NAQLOOM STUDIO</span>
           <div className="flex items-center gap-1">
-            <span className="inline-block w-3 h-1.5 bg-[#18383C]" />
-            <span className="inline-block w-3 h-1.5 bg-[#545333]" />
-            <span className="inline-block w-3 h-1.5 bg-[#878672]" />
+            <span className="inline-block w-2.5 sm:w-3 h-1.5 bg-[#18383C]" />
+            <span className="inline-block w-2.5 sm:w-3 h-1.5 bg-[#545333]" />
+            <span className="inline-block w-2.5 sm:w-3 h-1.5 bg-[#878672]" />
           </div>
         </div>
       </div>
@@ -345,7 +345,7 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
   };
 
   return (
-    <section className="relative w-screen h-screen bg-[#18383C] overflow-hidden flex flex-col justify-between select-none">
+    <section className="relative w-full h-[100svh] min-h-[560px] bg-[#18383C] overflow-hidden flex flex-col justify-between select-none">
       {/* SVG Filters & Transparent Postage-Stamp Ticket Cutout Mask */}
       <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
         <defs>
@@ -484,12 +484,14 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
       {/* 1. SIMPLE TOP NAVIGATION TEXT DIRECTLY INSIDE THE PICTURE */}
       <nav
         aria-label="Primary navigation"
-        className="relative z-30 pt-6 sm:pt-7 flex items-center justify-center gap-8 sm:gap-12 px-6 shrink-0"
+        className="relative z-30 w-full max-w-2xl mx-auto pt-4 sm:pt-7 flex items-center justify-between sm:justify-center gap-2 sm:gap-10 md:gap-12 px-4 sm:px-6 shrink-0"
       >
         {(
           [
             { id: 'home', label: 'Home' },
+            { id: 'posters', label: 'Posters' },
             { id: 'project', label: 'Project' },
+            { id: 'process', label: 'Process' },
             { id: 'about', label: 'About' },
             { id: 'services', label: 'Services' },
           ] as const
@@ -503,7 +505,7 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
                 e.preventDefault();
                 onSelectNav?.(navItem.id);
               }}
-              className={`font-sans text-sm sm:text-base font-medium tracking-wide text-[#FDFBD4] drop-shadow-[0_1px_4px_rgba(24,56,60,0.65)] transition-opacity whitespace-nowrap shrink-0 cursor-pointer ${
+              className={`py-1 font-sans text-[11px] sm:text-base font-medium tracking-wide text-[#FDFBD4] drop-shadow-[0_1px_4px_rgba(24,56,60,0.65)] transition-opacity whitespace-nowrap shrink-0 cursor-pointer ${
                 isActive
                   ? 'opacity-100 underline decoration-[#FDFBD4] underline-offset-6'
                   : 'opacity-80 hover:opacity-100'
@@ -516,18 +518,18 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
       </nav>
 
       {/* 2. HAND-DRAWN TITLE IN MIDDLE OF THE COURTYARD */}
-      <div className="relative z-20 my-auto flex flex-col items-center justify-center px-4 py-4">
+      <div className="relative z-20 my-auto flex flex-col items-center justify-center px-3 sm:px-4 py-2 sm:py-4 max-w-full overflow-hidden">
         {/* ROW 1: "NAQLOOM" */}
-        <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-2.5">
+        <div className="flex items-center justify-center gap-0.5 sm:gap-2 md:gap-2.5">
           {NAQLOOM_LETTERS.map((item, idx) =>
-            renderHandDrawnLetter(item, idx, 'naqloom', 0, 'clamp(4.2rem, 13vw, 10.8rem)')
+            renderHandDrawnLetter(item, idx, 'naqloom', 0, 'clamp(2.55rem, 12.2vw, 10.8rem)')
           )}
         </div>
 
         {/* ROW 2: "STUDIO" */}
-        <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3.5 -mt-1 sm:-mt-2">
+        <div className="flex items-center justify-center gap-1 sm:gap-2.5 md:gap-3.5 -mt-1 sm:-mt-2">
           {STUDIO_LETTERS.map((item, idx) =>
-            renderHandDrawnLetter(item, idx, 'studio', 0.35, 'clamp(3.1rem, 9.5vw, 7.6rem)')
+            renderHandDrawnLetter(item, idx, 'studio', 0.35, 'clamp(1.95rem, 9vw, 7.6rem)')
           )}
         </div>
       </div>
@@ -540,9 +542,9 @@ export const ReadingNookHero: React.FC<ReadingNookHeroProps> = ({
         role="region"
         aria-label="Studio services, toolkit, and availability ticket reel"
         aria-roledescription="carousel"
-        className="relative z-30 w-screen pb-5 sm:pb-7 overflow-hidden shrink-0"
+        className="relative z-30 w-full pb-4 sm:pb-7 overflow-hidden shrink-0"
       >
-        <div className="animate-marquee flex items-start gap-4 pr-4">
+        <div className="animate-marquee flex items-start gap-3 sm:gap-4 pr-3 sm:pr-4">
           {reelItems.map((card, idx) => renderTicketReelCard(card, idx))}
         </div>
       </motion.div>

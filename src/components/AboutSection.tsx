@@ -7,7 +7,7 @@ interface AboutSectionProps {
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onContactClick }) => {
   const [emailCopied, setEmailCopied] = useState<boolean>(false);
-  const designerEmail = 'fatimahghani.2026@gmail.com';
+  const designerEmail = 'naqloonstudio@gmail.com';
 
   // Matching 35mm analog film grain tile for the vintage studio frame
   const grainTileUrl = useMemo(() => {
@@ -56,25 +56,25 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onContactClick }) =>
       {/* Continuous Vertical Architectural Studio Margin Lines */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-6 sm:left-10 lg:left-16 w-px bg-[#18383C]/[0.08]"
+        className="pointer-events-none absolute inset-y-0 left-4 sm:left-10 lg:left-16 w-px bg-[#18383C]/[0.08]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-6 sm:right-10 lg:right-16 w-px bg-[#18383C]/[0.08]"
+        className="pointer-events-none absolute inset-y-0 right-4 sm:right-10 lg:right-16 w-px bg-[#18383C]/[0.08]"
       />
 
       {/* Structured Architectural Chapter Rule (04 · Atelier Portrait) */}
-      <div className="w-full max-w-[1280px] mx-auto px-6 md:px-12 mb-10 md:mb-14">
-        <div className="border-t border-b border-[#18383C]/15 py-3.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.22em] text-[#545333]">
-          <div className="flex items-center gap-3">
+      <div className="w-full max-w-[1280px] mx-auto px-5 sm:px-6 md:px-12 mb-8 sm:mb-10 md:mb-14">
+        <div className="border-t border-b border-[#18383C]/15 py-3 sm:py-3.5 flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[#545333]">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <span className="font-semibold text-[#18383C]">04 / 06</span>
             <span className="h-3 w-px bg-[#18383C]/20" />
             <span>ATELIER PORTRAIT</span>
           </div>
-          <span className="hidden sm:inline font-serif italic normal-case tracking-[0.02em] text-sm text-[#545333]">
+          <span className="hidden md:inline font-serif italic normal-case tracking-[0.02em] text-sm text-[#545333]">
             Independent Multidisciplinary Design Practice
           </span>
-          <span className="text-[#878672]">FATIMAH GHANI</span>
+          <span className="text-[#878672] shrink-0">FATIMAH GHANI</span>
         </div>
       </div>
       {/* Postage-Stamp Cutout Mask & Main-Page Style Duotone/Halation Filter */}
@@ -124,8 +124,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onContactClick }) =>
         </defs>
       </svg>
 
-      <div className="w-full max-w-[1280px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+      <div className="w-full max-w-[1280px] mx-auto px-5 sm:px-6 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-16 items-center">
           {/* LEFT COLUMN (5 Cols): Vintage Grainy Stamp Card in Main Page Style */}
           <div className="lg:col-span-5">
             <div
@@ -274,11 +274,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onContactClick }) =>
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="pt-2 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
               <button
                 type="button"
                 onClick={onContactClick}
-                className="px-6 py-3 bg-[#18383C] hover:bg-[#545333] text-[#FDFBD4] text-xs font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-6 py-3.5 sm:py-3 bg-[#18383C] hover:bg-[#545333] text-[#FDFBD4] text-xs font-mono uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Work With Me</span>
                 <ArrowDownRight className="w-4 h-4" />
@@ -287,14 +287,14 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onContactClick }) =>
               <button
                 type="button"
                 onClick={handleCopyEmail}
-                className="px-4 py-3 bg-[#D9D7B6]/60 hover:bg-[#D9D7B6] text-[#18383C] border border-[#878672]/40 text-xs font-mono transition-colors flex items-center gap-2 cursor-pointer"
+                className="px-4 py-3.5 sm:py-3 bg-[#D9D7B6]/60 hover:bg-[#D9D7B6] text-[#18383C] border border-[#878672]/40 text-xs font-mono transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Mail className="w-3.5 h-3.5 text-[#545333]" />
-                <span>{designerEmail}</span>
+                <Mail className="w-3.5 h-3.5 text-[#545333] shrink-0" />
+                <span className="truncate">{designerEmail}</span>
                 {emailCopied ? (
-                  <Check className="w-3.5 h-3.5 text-[#18383C]" />
+                  <Check className="w-3.5 h-3.5 text-[#18383C] shrink-0" />
                 ) : (
-                  <Copy className="w-3.5 h-3.5 opacity-70" />
+                  <Copy className="w-3.5 h-3.5 opacity-70 shrink-0" />
                 )}
               </button>
             </div>

@@ -224,6 +224,8 @@ const FullScreenProjectSlide: React.FC<{
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const cursorBadgeRef = useRef<HTMLDivElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
 
   // Preload adjacent slides so scrubbing through slides is instant
   React.useEffect(() => {
@@ -260,12 +262,36 @@ const FullScreenProjectSlide: React.FC<{
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = e.touches[0]?.clientX ?? null;
+    touchStartYRef.current = e.touches[0]?.clientY ?? null;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartXRef.current;
+    const endY = e.changedTouches[0]?.clientY ?? touchStartYRef.current;
+    const dx = endX - touchStartXRef.current;
+    const dy = endY - touchStartYRef.current;
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+
+    // Horizontal swipe cycles through project gallery slides on touch devices
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+      if (dx < 0) {
+        setActiveImageIdx((prev) => (prev + 1) % gallery.length);
+      } else {
+        setActiveImageIdx((prev) => (prev - 1 + gallery.length) % gallery.length);
+      }
+    }
+  };
+
   const currentMedia = gallery[activeImageIdx] || gallery[0];
   const formatNum = (n: number) => String(n).padStart(2, '0');
 
   return (
     <div
-      className="sticky top-0 h-svh w-screen overflow-hidden"
+      className="sticky top-0 h-svh w-full overflow-hidden"
       style={{ zIndex: index + 1 }}
     >
       <div
@@ -275,6 +301,8 @@ const FullScreenProjectSlide: React.FC<{
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -283,7 +311,7 @@ const FullScreenProjectSlide: React.FC<{
         }}
         aria-label={`Open case study for ${project.title}`}
         style={{ backgroundColor: currentMedia.bgHex || '#18383C' }}
-        className="group relative flex flex-col justify-between h-svh w-screen cursor-pointer outline-none text-left select-none overflow-hidden"
+        className="group relative flex flex-col justify-between h-svh w-full cursor-pointer outline-none text-left select-none overflow-hidden"
       >
         {isBehanceSlideDeck && !isCoverSlide ? (
           /* ASPECT-RATIO-PRESERVING FULL SCREEN SLIDE FOR INNER BEHANCE BOARDS (NO STRETCHING) */
@@ -296,7 +324,7 @@ const FullScreenProjectSlide: React.FC<{
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0.85 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className={`absolute inset-0 h-svh w-screen pointer-events-none ${getSlideFitClass(
+              className={`absolute inset-0 h-svh w-full pointer-events-none ${getSlideFitClass(
                 currentMedia.url
               )}`}
             />
@@ -378,11 +406,11 @@ const FullScreenProjectSlide: React.FC<{
         )}
 
         {/* TOP BAR: BRAND HEADER & CONTROLS */}
-        <div className="relative z-10 w-full flex items-start justify-between gap-4 px-6 pt-6 sm:px-10 sm:pt-8 md:px-12 md:pt-10 pointer-events-none">
+        <div className="relative z-10 w-full flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4 px-4 pt-4 sm:px-10 sm:pt-8 md:px-12 md:pt-10 pointer-events-none">
           {showCoverBrandOverlay ? (
-            <div className="max-w-2xl space-y-2">
+            <div className="max-w-2xl space-y-1.5 sm:space-y-2">
               {/* Unboxed Metadata Line */}
-              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.2em] text-[#D9D7B6]">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#D9D7B6]">
                 <span className="text-[#FDFBD4] font-semibold">
                   {formatNum(index + 1)} / {formatNum(total)}
                 </span>
@@ -398,11 +426,11 @@ const FullScreenProjectSlide: React.FC<{
 
               {/* Project Title & Tagline */}
               <div className="space-y-1">
-                <h3 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#FDFBD4] leading-[1.02]">
+                <h3 className="font-display text-2xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#FDFBD4] leading-[1.04]">
                   {project.title}
                 </h3>
                 {project.tagline && (
-                  <p className="font-serif italic text-base sm:text-xl text-[#D9D7B6]">
+                  <p className="font-serif italic text-sm sm:text-xl text-[#D9D7B6] leading-snug">
                     {isLumera
                       ? `“${project.tagline}” — Fragrance for the memories we keep.`
                       : isRiwaq
@@ -413,23 +441,30 @@ const FullScreenProjectSlide: React.FC<{
               </div>
             </div>
           ) : (
-            <div />
+            /* Mobile-only compact project header on inner slides so vertical phone screen is framed */
+            <div className="sm:hidden bg-[#18383C]/85 backdrop-blur-md border border-[#FDFBD4]/20 px-3 py-1.5">
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#FDFBD4]">
+                <span className="font-semibold">{project.title}</span>
+                <span className="text-[#D9D7B6]/50">·</span>
+                <span className="text-[#D9D7B6]">{currentMedia.label}</span>
+              </div>
+            </div>
           )}
 
-          <div className="flex items-center gap-2.5 shrink-0 pointer-events-auto">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0 pointer-events-auto sm:ml-auto">
             {project.behanceUrl && (
               <a
                 href={project.behanceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1.5 bg-[#18383C]/85 backdrop-blur-md border border-[#FDFBD4]/25 px-3.5 py-2 text-[11px] font-mono uppercase tracking-[0.16em] text-[#FDFBD4] hover:bg-[#FDFBD4] hover:text-[#18383C] transition-colors shadow-md"
+                className="inline-flex items-center gap-1.5 bg-[#18383C]/85 backdrop-blur-md border border-[#FDFBD4]/25 px-3 sm:px-3.5 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] text-[#FDFBD4] hover:bg-[#FDFBD4] hover:text-[#18383C] transition-colors shadow-md"
               >
                 <span>Behance</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             )}
-            <span className="inline-flex items-center gap-2 bg-[#FDFBD4] px-4 py-2 text-[11px] font-mono uppercase tracking-[0.16em] font-semibold text-[#18383C] shadow-md transition-transform duration-300 group-hover:translate-x-0.5">
+            <span className="inline-flex items-center gap-1.5 sm:gap-2 bg-[#FDFBD4] px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.16em] font-semibold text-[#18383C] shadow-md transition-transform duration-300 group-hover:translate-x-0.5">
               <span>Case Study</span>
               <span aria-hidden="true">→</span>
             </span>
@@ -437,7 +472,7 @@ const FullScreenProjectSlide: React.FC<{
         </div>
 
         {/* BOTTOM BAR: MINIMAL BRAND CAPTION & SLIDE SCRUBBER */}
-        <div className="relative z-10 w-full flex flex-col lg:flex-row lg:items-end justify-between gap-6 px-6 pb-6 sm:px-10 sm:pb-8 md:px-12 md:pb-10 pointer-events-none">
+        <div className="relative z-10 w-full flex flex-col lg:flex-row lg:items-end justify-between gap-3.5 sm:gap-6 px-4 pb-4 sm:px-10 sm:pb-8 md:px-12 md:pb-10 pointer-events-none">
           {showCoverBrandOverlay ? (
             <div className="max-w-lg space-y-2">
               <p
@@ -447,11 +482,11 @@ const FullScreenProjectSlide: React.FC<{
                     : isRiwaq
                       ? 'border-[#A98252]'
                       : 'border-[#C75A2E]'
-                } pl-3.5 text-xs sm:text-sm text-[#FDFBD4]/95 leading-snug line-clamp-2`}
+                } pl-3 sm:pl-3.5 text-xs sm:text-sm text-[#FDFBD4]/95 leading-snug line-clamp-2`}
               >
                 {project.summary}
               </p>
-              <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#D9D7B6]">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.16em] sm:tracking-[0.18em] text-[#D9D7B6]">
                 <span>{project.discipline}</span>
                 {project.extractedPalette && (
                   <>
@@ -476,31 +511,53 @@ const FullScreenProjectSlide: React.FC<{
             <div />
           )}
 
-          {/* Slide Scrubber Navigation */}
+          {/* Slide Scrubber Navigation with Touch Prev/Next Buttons */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5 self-start lg:self-end bg-[#18383C]/85 backdrop-blur-md border border-[#FDFBD4]/20 px-3.5 py-2 pointer-events-auto shadow-lg"
+            className="flex items-center justify-between sm:justify-start gap-2 w-full sm:w-auto self-start lg:self-end max-w-full overflow-x-auto no-scrollbar bg-[#18383C]/88 backdrop-blur-md border border-[#FDFBD4]/20 px-3 sm:px-3.5 py-1.5 sm:py-2 pointer-events-auto shadow-lg"
           >
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#D9D7B6] mr-2">
-              {currentMedia.label}
-            </span>
-            {gallery.map((item, idx) => (
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
-                key={item.label}
                 type="button"
-                onClick={() => setActiveImageIdx(idx)}
-                aria-label={item.label}
-                className="py-1.5 px-0.5 flex items-center cursor-pointer"
+                onClick={() =>
+                  setActiveImageIdx((prev) => (prev - 1 + gallery.length) % gallery.length)
+                }
+                aria-label="Previous slide"
+                className="px-1.5 py-0.5 text-[11px] font-mono text-[#FDFBD4]/80 hover:text-[#FDFBD4] border border-[#FDFBD4]/20 cursor-pointer"
               >
-                <span
-                  className={`h-1.5 transition-all duration-300 ${
-                    activeImageIdx === idx
-                      ? 'w-6 bg-[#FDFBD4]'
-                      : 'w-2 bg-[#FDFBD4]/35 hover:bg-[#FDFBD4]/75'
-                  }`}
-                />
+                ←
               </button>
-            ))}
+              <button
+                type="button"
+                onClick={() => setActiveImageIdx((prev) => (prev + 1) % gallery.length)}
+                aria-label="Next slide"
+                className="px-1.5 py-0.5 text-[11px] font-mono text-[#FDFBD4]/80 hover:text-[#FDFBD4] border border-[#FDFBD4]/20 cursor-pointer"
+              >
+                →
+              </button>
+              <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.14em] sm:tracking-[0.16em] text-[#D9D7B6] ml-1 whitespace-nowrap shrink-0">
+                {currentMedia.label}
+              </span>
+            </div>
+            <div className="flex items-center gap-1 shrink-0 overflow-x-auto no-scrollbar">
+              {gallery.map((item, idx) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setActiveImageIdx(idx)}
+                  aria-label={item.label}
+                  className="py-1.5 px-0.5 flex items-center cursor-pointer shrink-0"
+                >
+                  <span
+                    className={`h-1.5 transition-all duration-300 ${
+                      activeImageIdx === idx
+                        ? 'w-4 sm:w-6 bg-[#FDFBD4]'
+                        : 'w-1.5 sm:w-2 bg-[#FDFBD4]/35 hover:bg-[#FDFBD4]/75'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

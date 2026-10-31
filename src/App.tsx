@@ -216,14 +216,14 @@ export default function App() {
         }`}
       >
         <div className="relative bg-[#122629]/95 backdrop-blur-md text-[#FDFBD4] border-b border-[#FDFBD4]/15 shadow-[0_10px_30px_rgba(18,38,41,0.18)]">
-          <div className="w-full max-w-[1280px] mx-auto px-6 md:px-12 h-16 flex items-center justify-between gap-6">
+          <div className="w-full max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-6">
             {/* Left Brand Identity Lockup */}
             <button
               type="button"
               onClick={() => scrollToSection('home')}
-              className="group flex items-center gap-3.5 text-left cursor-pointer"
+              className="group flex items-center gap-3 text-left cursor-pointer shrink-0"
             >
-              <span className="font-display text-base sm:text-[17px] tracking-[0.16em] uppercase text-[#FDFBD4] group-hover:text-[#D9D7B6] transition-colors">
+              <span className="font-display text-sm sm:text-[17px] tracking-[0.14em] sm:tracking-[0.16em] uppercase text-[#FDFBD4] group-hover:text-[#D9D7B6] transition-colors">
                 Naqloom Studio
               </span>
               <span className="hidden sm:inline-block h-3.5 w-px bg-[#FDFBD4]/20" />
@@ -232,11 +232,12 @@ export default function App() {
               </span>
             </button>
 
-            {/* Center Editorial Section Index */}
-            <nav aria-label="Floating navigation" className="hidden md:flex items-center gap-8">
+            {/* Center Editorial Section Index (Desktop & Tablet) */}
+            <nav aria-label="Floating navigation" className="hidden md:flex items-center gap-6 lg:gap-8">
               {(
                 [
                   { id: 'home', label: 'Home' },
+                  { id: 'posters', label: 'Posters' },
                   { id: 'project', label: 'Selected Work' },
                   { id: 'process', label: 'Process' },
                   { id: 'about', label: 'About' },
@@ -249,7 +250,7 @@ export default function App() {
                     key={item.id}
                     type="button"
                     onClick={() => scrollToSection(item.id)}
-                    className={`group relative py-1 font-sans font-medium text-[11px] tracking-[0.18em] uppercase transition-colors cursor-pointer ${
+                    className={`group relative py-1 font-sans font-medium text-[11px] tracking-[0.18em] uppercase transition-colors cursor-pointer whitespace-nowrap ${
                       isCurrent ? 'text-[#FDFBD4]' : 'text-[#FDFBD4]/75 hover:text-[#FDFBD4]'
                     }`}
                   >
@@ -268,9 +269,9 @@ export default function App() {
             <button
               type="button"
               onClick={() => scrollToSection('contact-form')}
-              className="group inline-flex items-center gap-2 px-4 py-2 bg-[#FDFBD4] text-[#122629] hover:bg-[#D9D7B6] transition-colors cursor-pointer"
+              className="group inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#FDFBD4] text-[#122629] hover:bg-[#D9D7B6] transition-colors cursor-pointer shrink-0"
             >
-              <span className="font-sans font-semibold text-[10px] sm:text-[11px] uppercase tracking-[0.2em]">
+              <span className="font-sans font-semibold text-[10px] sm:text-[11px] uppercase tracking-[0.16em] sm:tracking-[0.2em]">
                 Start a Project
               </span>
               <span className="font-mono text-xs transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -278,6 +279,40 @@ export default function App() {
               </span>
             </button>
           </div>
+
+          {/* Mobile Horizontal Scrollable Section Bar (< 768px) */}
+          <nav
+            aria-label="Mobile section navigation"
+            className="md:hidden flex items-center gap-5 px-4 py-2 border-t border-[#FDFBD4]/10 overflow-x-auto no-scrollbar"
+          >
+            {(
+              [
+                { id: 'home', label: 'Home' },
+                { id: 'posters', label: 'Posters' },
+                { id: 'project', label: 'Work' },
+                { id: 'process', label: 'Process' },
+                { id: 'about', label: 'About' },
+                { id: 'services', label: 'Services' },
+              ] as const
+            ).map((item) => {
+              const isCurrent = activeNav === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => scrollToSection(item.id)}
+                  className={`relative py-0.5 font-sans font-medium text-[10px] tracking-[0.18em] uppercase whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
+                    isCurrent ? 'text-[#FDFBD4]' : 'text-[#FDFBD4]/65'
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {isCurrent && (
+                    <span className="absolute inset-x-0 -bottom-0.5 h-px bg-[#FDFBD4]" />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
         </div>
       </header>
 
@@ -302,16 +337,16 @@ export default function App() {
         {/* SEAMLESS ATMOSPHERIC EDITORIAL BRIDGE BETWEEN POSTER ARCHIVE (#122629) & SELECTED CASE STUDIES (#24110E) */}
         <section
           aria-label="Editorial Bridge"
-          className="relative min-h-screen w-full flex flex-col justify-between bg-gradient-to-b from-[#122629] via-[#161F20] to-[#24110E] text-[#FDFBD4] py-20 sm:py-28 px-6 sm:px-10 md:px-16 lg:px-24 overflow-hidden"
+          className="relative min-h-[70svh] md:min-h-screen w-full flex flex-col justify-between bg-gradient-to-b from-[#122629] via-[#161F20] to-[#24110E] text-[#FDFBD4] py-14 sm:py-24 md:py-28 px-5 sm:px-10 md:px-16 lg:px-24 overflow-hidden"
         >
           {/* Continuous Vertical Architectural Studio Margin Lines */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 left-6 sm:left-10 lg:left-16 w-px bg-[#FDFBD4]/[0.07]"
+            className="pointer-events-none absolute inset-y-0 left-4 sm:left-10 lg:left-16 w-px bg-[#FDFBD4]/[0.07]"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-6 sm:right-10 lg:right-16 w-px bg-[#FDFBD4]/[0.07]"
+            className="pointer-events-none absolute inset-y-0 right-4 sm:right-10 lg:right-16 w-px bg-[#FDFBD4]/[0.07]"
           />
           {/* Subtle Warm Candlelit Radial Glow */}
           <div
@@ -321,21 +356,21 @@ export default function App() {
 
           {/* Top Vertical Connecting Thread from Poster Archive */}
           <div className="relative z-10 flex flex-col items-center justify-center">
-            <span className="h-20 sm:h-24 w-px bg-gradient-to-b from-[#FDFBD4]/10 via-[#FDFBD4]/35 to-[#FDFBD4]/10" />
+            <span className="h-14 sm:h-24 w-px bg-gradient-to-b from-[#FDFBD4]/10 via-[#FDFBD4]/35 to-[#FDFBD4]/10" />
           </div>
 
           {/* Center Editorial Content */}
-          <div className="relative z-10 max-w-5xl w-full mx-auto my-auto py-12">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-6 mb-10 border-b border-[#FDFBD4]/15">
-              <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-[#D9D7B6]/70">
+          <div className="relative z-10 max-w-5xl w-full mx-auto my-auto py-8 sm:py-12">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 pb-5 sm:pb-6 mb-8 sm:mb-10 border-b border-[#FDFBD4]/15">
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#D9D7B6]/70">
                 02 · FROM PRINT STUDY TO BRAND WORLD
               </span>
-              <span className="font-serif italic text-base sm:text-lg tracking-[0.02em] text-[#D9D7B6]/85">
+              <span className="font-serif italic text-sm sm:text-lg tracking-[0.02em] text-[#D9D7B6]/85">
                 Selected Identity &amp; Packaging Case Studies ↓
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-14 items-start">
               <div className="md:col-span-5">
                 <h2 className="font-display text-2xl sm:text-3xl md:text-[32px] leading-[1.28] tracking-[-0.01em] text-[#FDFBD4] font-normal">
                   Translating visual atmosphere into{' '}
@@ -346,7 +381,7 @@ export default function App() {
               </div>
 
               <div className="md:col-span-7">
-                <p className="font-sans text-base sm:text-[17px] leading-[1.8] text-[#D9D7B6]/85 font-normal max-w-[62ch]">
+                <p className="font-sans text-sm sm:text-[17px] leading-[1.75] sm:leading-[1.8] text-[#D9D7B6]/85 font-normal max-w-[62ch]">
                   Every visual artifact begins as a quiet study in light, texture, and cultural memory—before expanding into a living brand ecosystem. Where the poster archive captures distilled moments of atmosphere, the following case studies unfold the complete tactile narrative: from bespoke vessel architecture and material finish to packaging rituals crafted to be held and remembered.
                 </p>
               </div>
@@ -355,7 +390,7 @@ export default function App() {
 
           {/* Bottom Vertical Connecting Thread into First Case Study */}
           <div className="relative z-10 flex flex-col items-center justify-center">
-            <span className="h-20 sm:h-24 w-px bg-gradient-to-b from-[#FDFBD4]/35 to-transparent" />
+            <span className="h-14 sm:h-24 w-px bg-gradient-to-b from-[#FDFBD4]/35 to-transparent" />
           </div>
         </section>
 

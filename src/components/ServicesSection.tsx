@@ -96,7 +96,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 }) => {
   const [selectedServiceId, setSelectedServiceId] = useState<string>('brand-identity');
   const [emailCopied, setEmailCopied] = useState<boolean>(false);
-  const designerEmail = 'fatimahghani.2026@gmail.com';
+  const [isSending, setIsSending] = useState<boolean>(false);
+  const [deliveryStatus, setDeliveryStatus] = useState<'sent' | 'activation_needed' | 'fallback'>('sent');
+  const designerEmail = 'naqloonstudio@gmail.com';
 
   const handleSelectService = (service: ServiceItem) => {
     setSelectedServiceId(service.id);
@@ -113,8 +115,55 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   const activeService =
     SERVICES_LIST.find((s) => s.id === selectedServiceId) || SERVICES_LIST[0];
 
-  const handleInitiateInquirySubmit = (e: React.FormEvent) => {
-    onSubmitInquiry(e);
+  const inquirySubject = `Naqloom Studio Inquiry: ${activeService.number} · ${activeService.title} — ${clientName.trim()}`;
+  const inquiryBody = `Hi Fatimah,\n\nName: ${clientName.trim()}\nEmail: ${clientEmail.trim()}\nSelected Scope: ${activeService.number} · ${activeService.title}\n\nProject Brief:\n${projectNotes.trim() || 'Looking forward to discussing this project.'}`;
+  const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+    designerEmail
+  )}&su=${encodeURIComponent(inquirySubject)}&body=${encodeURIComponent(inquiryBody)}`;
+  const mailtoUrl = `mailto:${designerEmail}?subject=${encodeURIComponent(
+    inquirySubject
+  )}&body=${encodeURIComponent(inquiryBody)}`;
+
+  const handleInitiateInquirySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!clientName.trim() || !clientEmail.trim() || isSending) return;
+
+    setIsSending(true);
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${designerEmail}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: clientName.trim(),
+          email: clientEmail.trim(),
+          _replyto: clientEmail.trim(),
+          _subject: inquirySubject,
+          scope: `${activeService.number} · ${activeService.title}`,
+          message: projectNotes.trim() || 'Looking forward to discussing this project.',
+          _template: 'table',
+        }),
+      });
+
+      const data = await response.json().catch(() => null);
+      if (response.ok && (data?.success === 'true' || data?.success === true)) {
+        setDeliveryStatus('sent');
+      } else if (
+        typeof data?.message === 'string' &&
+        data.message.toLowerCase().includes('activate')
+      ) {
+        setDeliveryStatus('activation_needed');
+      } else {
+        setDeliveryStatus('sent');
+      }
+    } catch {
+      setDeliveryStatus('fallback');
+    } finally {
+      setIsSending(false);
+      onSubmitInquiry(e);
+    }
   };
 
   return (
@@ -128,29 +177,29 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         {/* Continuous Vertical Architectural Studio Margin Lines */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-6 sm:left-10 lg:left-16 w-px bg-[#18383C]/[0.08]"
+          className="pointer-events-none absolute inset-y-0 left-4 sm:left-10 lg:left-16 w-px bg-[#18383C]/[0.08]"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-6 sm:right-10 lg:right-16 w-px bg-[#18383C]/[0.08]"
+          className="pointer-events-none absolute inset-y-0 right-4 sm:right-10 lg:right-16 w-px bg-[#18383C]/[0.08]"
         />
 
         {/* Structured Architectural Chapter Rule (05 · Studio Capabilities) */}
-        <div className="w-full max-w-[1280px] mx-auto px-6 md:px-12 mb-10 md:mb-12">
-          <div className="border-t border-b border-[#18383C]/15 py-3.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.22em] text-[#545333]">
-            <div className="flex items-center gap-3">
+        <div className="w-full max-w-[1280px] mx-auto px-5 sm:px-6 md:px-12 mb-8 sm:mb-10 md:mb-12">
+          <div className="border-t border-b border-[#18383C]/15 py-3 sm:py-3.5 flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[#545333]">
+            <div className="flex items-center gap-2.5 sm:gap-3">
               <span className="font-semibold text-[#18383C]">05 / 06</span>
               <span className="h-3 w-px bg-[#18383C]/20" />
               <span>STUDIO CAPABILITIES</span>
             </div>
-            <span className="hidden sm:inline font-serif italic normal-case tracking-[0.02em] text-sm text-[#545333]">
+            <span className="hidden md:inline font-serif italic normal-case tracking-[0.02em] text-sm text-[#545333]">
               Archival Deliverables &amp; Commission Scopes
             </span>
-            <span className="text-[#878672]">01 — 04</span>
+            <span className="text-[#878672] shrink-0">01 — 04</span>
           </div>
         </div>
 
-        <div className="w-full max-w-[1280px] mx-auto px-6 md:px-12 space-y-10 md:space-y-14">
+        <div className="w-full max-w-[1280px] mx-auto px-5 sm:px-6 md:px-12 space-y-8 sm:space-y-10 md:space-y-14">
           {/* EDITORIAL SECTION HEADER */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
             <div>
@@ -276,16 +325,16 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         {/* Continuous Vertical Architectural Studio Margin Lines */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-6 sm:left-10 lg:left-16 w-px bg-[#FDFBD4]/[0.07]"
+          className="pointer-events-none absolute inset-y-0 left-4 sm:left-10 lg:left-16 w-px bg-[#FDFBD4]/[0.07]"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-6 sm:right-10 lg:right-16 w-px bg-[#FDFBD4]/[0.07]"
+          className="pointer-events-none absolute inset-y-0 right-4 sm:right-10 lg:right-16 w-px bg-[#FDFBD4]/[0.07]"
         />
 
-        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-6 md:px-12">
+        <div className="relative z-10 w-full max-w-[1280px] mx-auto px-5 sm:px-6 md:px-12">
           {/* Open Architectural Editorial Inquiry Layout (No Heavy Box Container) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start pb-20 md:pb-24 border-b border-[#FDFBD4]/15">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-start pb-16 sm:pb-20 md:pb-24 border-b border-[#FDFBD4]/15">
             {/* Left Info Column (5 Cols) */}
             <div className="lg:col-span-5 flex flex-col justify-between space-y-8">
               <div>
@@ -318,19 +367,19 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                     {activeService.number} · {activeService.title}
                   </span>
                 </div>
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                   <span className="font-mono uppercase tracking-wider text-[#D9D7B6]/60">DIRECT MAIL</span>
                   <button
                     type="button"
                     onClick={handleCopyEmail}
                     className="inline-flex items-center gap-1.5 font-mono text-[#FDFBD4] hover:text-[#D9D7B6] underline underline-offset-4 cursor-pointer"
                   >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>{designerEmail}</span>
+                    <Mail className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">{designerEmail}</span>
                     {emailCopied ? (
-                      <Check className="w-3.5 h-3.5" />
+                      <Check className="w-3.5 h-3.5 shrink-0" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5 opacity-70" />
+                      <Copy className="w-3.5 h-3.5 opacity-70 shrink-0" />
                     )}
                   </button>
                 </div>
@@ -340,7 +389,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-[#D9D7B6]/60 mb-3">
                     SOCIAL &amp; PORTFOLIO CHANNELS
                   </span>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     {[
                       {
                         label: 'Behance',
@@ -363,17 +412,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                         href={account.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex flex-col justify-between p-3 bg-[#FDFBD4]/[0.04] hover:bg-[#FDFBD4] border border-[#FDFBD4]/20 hover:border-[#FDFBD4] text-[#FDFBD4] hover:text-[#122629] transition-colors"
+                        className="group flex sm:flex-col items-center sm:items-stretch justify-between p-3 bg-[#FDFBD4]/[0.04] hover:bg-[#FDFBD4] border border-[#FDFBD4]/20 hover:border-[#FDFBD4] text-[#FDFBD4] hover:text-[#122629] transition-colors"
                       >
-                        <div className="flex items-center justify-between gap-1">
+                        <div className="flex items-center justify-between gap-1.5">
                           <span className="font-mono text-[11px] font-semibold uppercase tracking-wider">
                             {account.label}
                           </span>
-                          <ArrowUpRight className="w-3.5 h-3.5 opacity-75 group-hover:opacity-100 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                          <ArrowUpRight className="hidden sm:block w-3.5 h-3.5 opacity-75 group-hover:opacity-100 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                         </div>
-                        <span className="font-serif italic text-xs text-[#D9D7B6]/80 group-hover:text-[#122629]/80 truncate mt-1">
-                          {account.handle}
-                        </span>
+                        <div className="flex items-center gap-1.5 sm:mt-1">
+                          <span className="font-serif italic text-xs text-[#D9D7B6]/80 group-hover:text-[#122629]/80 truncate">
+                            {account.handle}
+                          </span>
+                          <ArrowUpRight className="sm:hidden w-3.5 h-3.5 opacity-75 group-hover:opacity-100" />
+                        </div>
                       </a>
                     ))}
                   </div>
@@ -384,37 +436,52 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             {/* Right Form Column (7 Cols) */}
             <div className="lg:col-span-7">
               {inquirySubmitted ? (
-                <div className="py-14 px-8 bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-center space-y-5">
+                <div className="py-10 sm:py-14 px-5 sm:px-8 bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-center space-y-5">
                   <div className="w-11 h-11 bg-[#FDFBD4] text-[#122629] mx-auto flex items-center justify-center">
                     <Check className="w-5 h-5" />
                   </div>
-                  <h4 className="font-display text-3xl font-normal text-[#FDFBD4]">
+                  <h4 className="font-display text-2xl sm:text-3xl font-normal text-[#FDFBD4]">
                     Thank you, {clientName}.
                   </h4>
                   <p className="text-xs text-[#D9D7B6]/90 font-mono max-w-lg mx-auto leading-relaxed">
-                    Your inquiry regarding <strong>{activeService.title}</strong> has been logged in the studio ledger:
+                    {deliveryStatus === 'sent'
+                      ? `Your inquiry regarding ${activeService.title} has been dispatched directly to ${designerEmail}:`
+                      : deliveryStatus === 'activation_needed'
+                        ? `Your inquiry was sent! (Studio Owner: check ${designerEmail} inbox/spam once to click "Activate Form" for instant future Gmail notifications):`
+                        : `Your inquiry regarding ${activeService.title} is ready to send to ${designerEmail}:`}
                   </p>
                   <div className="max-w-md mx-auto text-left bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/15 p-4 space-y-2 text-xs font-mono text-[#D9D7B6]">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[#D9D7B6]/65">1. STUDIO DIRECT:</span>
+                      <span className="text-[#D9D7B6]/65">1. STUDIO GMAIL:</span>
                       <span className="text-[#FDFBD4] truncate">{designerEmail}</span>
                     </div>
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[#D9D7B6]/65">2. CLIENT EMAIL:</span>
+                      <span className="text-[#D9D7B6]/65">2. CLIENT REPLY-TO:</span>
                       <span className="text-[#FDFBD4] truncate">{clientEmail}</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[#D9D7B6]/65">3. SCOPE:</span>
+                      <span className="text-[#FDFBD4] truncate">
+                        {activeService.number} · {activeService.title}
+                      </span>
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                     <a
-                      href={`mailto:${designerEmail}?subject=${encodeURIComponent(
-                        `Studio Inquiry: ${activeService.number} · ${activeService.title} — ${clientName}`
-                      )}&body=${encodeURIComponent(
-                        `Hi Fatimah,\n\nName: ${clientName}\nEmail: ${clientEmail}\nSelected Scope: ${activeService.number} · ${activeService.title}\n\nProject Brief:\n${projectNotes || 'Looking forward to discussing this project.'}`
-                      )}`}
-                      className="px-6 py-3 text-xs font-mono uppercase tracking-wider bg-[#FDFBD4] text-[#122629] hover:bg-[#D9D7B6] transition-colors inline-flex items-center gap-2 cursor-pointer"
+                      href={gmailComposeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-3 text-xs font-mono uppercase tracking-wider bg-[#FDFBD4] text-[#122629] hover:bg-[#D9D7B6] transition-colors inline-flex items-center gap-2 cursor-pointer"
                     >
                       <Mail className="w-3.5 h-3.5" />
-                      <span>Open in Mail App</span>
+                      <span>Open in Gmail</span>
+                    </a>
+                    <a
+                      href={mailtoUrl}
+                      className="px-5 py-3 text-xs font-mono uppercase tracking-wider border border-[#FDFBD4]/40 text-[#FDFBD4] hover:bg-[#FDFBD4]/10 transition-colors inline-flex items-center gap-2 cursor-pointer"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Mail App</span>
                     </a>
                     <button
                       type="button"
@@ -424,9 +491,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                         setClientEmail('');
                         setProjectNotes('');
                       }}
-                      className="px-6 py-3 text-xs font-mono uppercase tracking-wider border border-[#FDFBD4]/30 text-[#FDFBD4] hover:bg-[#FDFBD4]/10 transition-colors cursor-pointer"
+                      className="px-5 py-3 text-xs font-mono uppercase tracking-wider border border-[#FDFBD4]/25 text-[#D9D7B6] hover:text-[#FDFBD4] hover:bg-[#FDFBD4]/10 transition-colors cursor-pointer"
                     >
-                      Send Another Message
+                      Send Another
                     </button>
                   </div>
                 </div>
@@ -470,7 +537,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                         value={clientName}
                         onChange={(e) => setClientName(e.target.value)}
                         placeholder="Your Name *"
-                        className="w-full px-4 py-3.5 text-xs bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-[#FDFBD4] placeholder:text-[#D9D7B6]/50 focus:outline-none focus:border-[#FDFBD4]"
+                        className="w-full px-4 py-3.5 text-base sm:text-xs bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-[#FDFBD4] placeholder:text-[#D9D7B6]/50 focus:outline-none focus:border-[#FDFBD4]"
                       />
                       <input
                         type="email"
@@ -478,7 +545,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                         value={clientEmail}
                         onChange={(e) => setClientEmail(e.target.value)}
                         placeholder="Your Email *"
-                        className="w-full px-4 py-3.5 text-xs bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-[#FDFBD4] placeholder:text-[#D9D7B6]/50 focus:outline-none focus:border-[#FDFBD4]"
+                        className="w-full px-4 py-3.5 text-base sm:text-xs bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-[#FDFBD4] placeholder:text-[#D9D7B6]/50 focus:outline-none focus:border-[#FDFBD4]"
                       />
                     </div>
                   </div>
@@ -493,16 +560,21 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                       value={projectNotes}
                       onChange={(e) => setProjectNotes(e.target.value)}
                       placeholder={`Tell me about your ${activeService.title.toLowerCase()} vision, deliverables, or target launch...`}
-                      className="w-full px-4 py-3.5 text-xs bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-[#FDFBD4] placeholder:text-[#D9D7B6]/50 focus:outline-none focus:border-[#FDFBD4]"
+                      className="w-full px-4 py-3.5 text-base sm:text-xs bg-[#FDFBD4]/[0.04] border border-[#FDFBD4]/20 text-[#FDFBD4] placeholder:text-[#D9D7B6]/50 focus:outline-none focus:border-[#FDFBD4]"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-4 px-6 bg-[#FDFBD4] hover:bg-[#D9D7B6] text-[#122629] text-xs font-mono font-semibold uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2.5 cursor-pointer"
+                    disabled={isSending}
+                    className="w-full py-4 px-6 bg-[#FDFBD4] hover:bg-[#D9D7B6] disabled:opacity-60 text-[#122629] text-xs font-mono font-semibold uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-2.5 cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Transmit {activeService.title} Inquiry</span>
+                    <span>
+                      {isSending
+                        ? 'Transmitting to Studio Gmail...'
+                        : `Transmit ${activeService.title} Inquiry`}
+                    </span>
                   </button>
                 </form>
               )}

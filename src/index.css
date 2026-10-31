@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
-  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-display: "Philosopher", Georgia, serif;
+  --font-serif: "Philosopher", Georgia, serif;
+  --font-sans: "Mulish", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "Mulish", "JetBrains Mono", monospace;
 
   --color-canvas: #FDFBD4;
   --color-beige: #D9D7B6;
@@ -13,8 +13,11 @@
 }
 
 @layer base {
-  body {
+  body, p, li, input, textarea, button, a {
     font-family: var(--font-sans);
+  }
+
+  body {
     background-color: #FDFBD4;
     color: #545333;
     overflow-x: hidden;
@@ -22,13 +25,25 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2, h3, h4, .font-display {
+  h1, h2, h3, h4, h5, h6, .font-display {
     font-family: var(--font-display);
   }
 
   .font-serif {
     font-family: var(--font-serif);
   }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @keyframes marquee-scroll {
@@ -245,7 +260,7 @@
   --lb-faint: rgba(217, 215, 182, 0.42);
   --lb-line: rgba(253, 251, 212, 0.22);
   --lb-glow: rgba(253, 251, 212, 0.75);
-  --font-playfair: "Playfair Display", Georgia, serif;
+  --font-playfair: "Philosopher", Georgia, serif;
   position: relative;
   overflow: hidden;
   user-select: none;
@@ -528,8 +543,11 @@
     cursor: default;
   }
   [data-lens-bloom] .lb-card {
-    box-shadow: none;
-    border-radius: 0;
+    border-radius: 6px;
+    box-shadow:
+      0 24px 48px -20px rgba(0, 0, 0, 0.65),
+      0 8px 20px -10px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(253, 251, 212, 0.14);
   }
   [data-lens-bloom] .lb-word,
   [data-lens-bloom] .lb-cap,

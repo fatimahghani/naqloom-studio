@@ -206,7 +206,8 @@ export const ProcessSection: React.FC = () => {
       if (!trackRef.current || !trackWrapperRef.current) return;
       const trackWidth = trackRef.current.scrollWidth;
       const visibleWidth = trackWrapperRef.current.clientWidth;
-      const computedMax = Math.max(0, trackWidth - visibleWidth + 24);
+      const padAllowance = window.innerWidth < 640 ? 32 : 24;
+      const computedMax = Math.max(0, trackWidth - visibleWidth + padAllowance);
       setMaxScrollX(computedMax);
     };
 
@@ -262,52 +263,64 @@ export const ProcessSection: React.FC = () => {
       {/* Continuous Vertical Architectural Studio Margin Lines */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-6 sm:left-10 lg:left-16 w-px bg-[#18383C]/[0.08] z-20"
+        className="pointer-events-none absolute inset-y-0 left-4 sm:left-10 lg:left-16 w-px bg-[#18383C]/[0.08] z-20"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-6 sm:right-10 lg:right-16 w-px bg-[#18383C]/[0.08] z-20"
+        className="pointer-events-none absolute inset-y-0 right-4 sm:right-10 lg:right-16 w-px bg-[#18383C]/[0.08] z-20"
       />
       {/* Sticky 100vh Viewport Container (Matches .framer-1dlexu3 on inrootdesign.com) */}
-      <div className="sticky top-0 w-full h-svh overflow-hidden flex flex-col justify-between items-center py-8 sm:py-12">
-        {/* Top Quiet Studio Context Bar */}
-        <div className="w-full max-w-[1280px] px-8 sm:px-14 lg:px-24 flex items-center justify-between text-[11px] font-sans font-medium uppercase tracking-[0.24em] text-[#545333] shrink-0">
-          <span>03 · THE PROCESS</span>
-          <span className="hidden sm:inline font-serif italic normal-case tracking-[0.02em] text-base text-[#545333]">
-            How a quiet concept becomes a tactile brand world
-          </span>
-          <span className="font-mono tabular-nums text-[#18383C]">
-            0{activeStepIndex + 1} / 0{INROOT_PROCESS_CARDS.length}
-          </span>
+      <div className="sticky top-0 w-full h-svh overflow-hidden flex flex-col justify-between items-center py-4 sm:py-9 md:py-12">
+        {/* Top Quiet Studio Context Bar + Mobile Section Title */}
+        <div className="w-full max-w-[1280px] px-4 sm:px-14 lg:px-24 shrink-0 space-y-1.5">
+          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-sans font-medium uppercase tracking-[0.22em] sm:tracking-[0.24em] text-[#545333]">
+            <span>03 · THE PROCESS</span>
+            <span className="hidden sm:inline font-serif italic normal-case tracking-[0.02em] text-base text-[#545333]">
+              How a quiet concept becomes a tactile brand world
+            </span>
+            <span className="font-mono tabular-nums text-[#18383C]">
+              0{activeStepIndex + 1} / 0{INROOT_PROCESS_CARDS.length}
+            </span>
+          </div>
+
+          {/* Mobile-only Compact Title Header (Replaces Left Column so Card 01 is Centered on Mobile) */}
+          <div className="sm:hidden flex items-baseline justify-between gap-2 pt-0.5 border-t border-[#18383C]/12">
+            <h2 className="font-display text-xl font-normal tracking-tight text-[#18383C]">
+              The Naqloom Process
+            </h2>
+            <span className="font-serif italic text-xs text-[#545333]">
+              Five-stage discipline
+            </span>
+          </div>
         </div>
 
         {/* Center Horizontal Scroll Stage (Matches .framer-13tztxc & .framer-nocpvy on inrootdesign.com) */}
         <div className="w-full flex-1 flex items-center justify-center overflow-hidden my-auto">
           <div
             ref={trackWrapperRef}
-            className="w-full max-w-[1100px] h-full max-h-[560px] px-5 flex items-center justify-start overflow-visible"
+            className="w-full max-w-[1100px] h-full max-h-[560px] px-4 sm:px-5 flex items-center justify-start overflow-visible"
           >
             <motion.div
               ref={trackRef}
               style={{ x }}
-              className="flex flex-row items-center justify-start gap-6 h-full will-change-transform"
+              className="flex flex-row items-center justify-start gap-4 sm:gap-6 h-full will-change-transform"
             >
-              {/* ITEM 0: Left Title Block */}
-              <div className="w-[240px] sm:w-[265px] h-[480px] sm:h-[548px] shrink-0 flex flex-col justify-center items-start gap-5 pr-2">
+              {/* ITEM 0: Left Title Block (Desktop & Tablet >= 640px) */}
+              <div className="hidden sm:flex w-[265px] h-[510px] md:h-[548px] max-h-[calc(100svh-135px)] shrink-0 flex-col justify-center items-start gap-5 pr-2">
                 <div className="flex flex-col items-start">
-                  <p className="font-display text-[50px] sm:text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
+                  <p className="font-display text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
                     The
                   </p>
-                  <p className="font-display text-[50px] sm:text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
+                  <p className="font-display text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
                     Naqloom
                   </p>
-                  <p className="font-display text-[50px] sm:text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
+                  <p className="font-display text-[62px] font-normal leading-[0.98] tracking-[-0.02em] text-[#18383C]">
                     Process
                   </p>
                 </div>
 
                 {/* Editorial Luxury Serif Secondary Subtitle */}
-                <div className="font-serif italic text-[22px] sm:text-[26px] leading-[1.18] tracking-[0.01em] text-[#545333] -mt-1">
+                <div className="font-serif italic text-[26px] leading-[1.18] tracking-[0.01em] text-[#545333] -mt-1">
                   A proven five-stage discipline
                 </div>
 
@@ -327,7 +340,7 @@ export const ProcessSection: React.FC = () => {
                 <article
                   key={card.number}
                   onClick={() => scrollToCardIndex(index)}
-                  className="group relative w-[84vw] sm:w-[460px] md:w-[525px] h-[480px] sm:h-[548px] shrink-0 overflow-hidden bg-[#8A795D] cursor-pointer shadow-[0_20px_50px_rgba(24,56,60,0.16)]"
+                  className="group relative w-[calc(100vw-32px)] sm:w-[460px] md:w-[525px] h-[425px] sm:h-[510px] md:h-[548px] max-h-[calc(100svh-150px)] sm:max-h-[calc(100svh-135px)] shrink-0 overflow-hidden bg-[#8A795D] cursor-pointer shadow-[0_20px_50px_rgba(24,56,60,0.16)]"
                 >
                   {/* 0. Instant Local Sunlit Studio Base Layer (Zero network delay, prevents any dark flash) */}
                   <img
@@ -412,21 +425,21 @@ export const ProcessSection: React.FC = () => {
                   />
 
                   {/* 6. Top-Left & Top-Right Quiet Step Metadata */}
-                  <div className="relative z-10 px-6 pt-5 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.14em] text-[#FDFBD4] drop-shadow-[0_1px_4px_rgba(24,56,60,0.8)]">
-                    <span>{card.phaseKicker}</span>
-                    <span className="text-[#FDFBD4]/90">{card.subtitle}</span>
+                  <div className="relative z-10 px-4 sm:px-6 pt-4 sm:pt-5 flex items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.12em] sm:tracking-[0.14em] text-[#FDFBD4] drop-shadow-[0_1px_4px_rgba(24,56,60,0.8)]">
+                    <span className="truncate">{card.phaseKicker}</span>
+                    <span className="text-[#FDFBD4]/90 shrink-0">{card.subtitle}</span>
                   </div>
 
                   {/* 7. Center Giant All-Caps Editorial Wordmark (DISCOVERY / STRATEGY / DESIGN / BUILD / LAUNCH) */}
                   <div className="
-                    absolute inset-x-0 top-[42%] -translate-y-1/2
-                    z-10 flex items-center justify-center px-4
+                    absolute inset-x-0 top-[33%] sm:top-[42%] -translate-y-1/2
+                    z-10 flex items-center justify-center px-3 sm:px-4
                     pointer-events-none select-none
                   ">
                     <h3
                       className="
                         font-display font-normal uppercase
-                        text-[48px] sm:text-[66px] md:text-[74px]
+                        text-[38px] sm:text-[64px] md:text-[74px]
                         leading-none tracking-[0.02em] text-center
                         drop-shadow-[0_6px_26px_rgba(24,56,60,0.65)]
                         transition-transform duration-700 ease-out
@@ -446,8 +459,8 @@ export const ProcessSection: React.FC = () => {
                   {/* 8. Bottom-Right Frosted Translucent Info Box (Exact match to inrootdesign.com cards) */}
                   <div
                     className="
-                      absolute bottom-5 right-5 left-5 sm:left-[26%]
-                      z-20 rounded-[12px] p-4 sm:p-5
+                      absolute bottom-3.5 sm:bottom-5 right-3.5 sm:right-5 left-3.5 sm:left-[26%]
+                      z-20 rounded-[12px] p-3.5 sm:p-5
                       backdrop-blur-md border border-[#FDFBD4]/20
                       text-[#FDFBD4] shadow-[0_12px_32px_rgba(0,0,0,0.34)]
                       transition-transform duration-500 ease-out
@@ -455,11 +468,11 @@ export const ProcessSection: React.FC = () => {
                     "
                     style={{ background: card.boxTint }}
                   >
-                    <p className="text-[11.5px] sm:text-[12.5px] leading-[1.48] text-[#FDFBD4]/95 font-normal mb-3">
+                    <p className="text-[11px] sm:text-[12.5px] leading-[1.45] sm:leading-[1.48] text-[#FDFBD4]/95 font-normal mb-2 sm:mb-3">
                       {card.description}
                     </p>
 
-                    <ul className="space-y-0.5 text-[11px] sm:text-[12px] leading-[1.42] text-[#FDFBD4]/90">
+                    <ul className="space-y-0.5 text-[10.5px] sm:text-[12px] leading-[1.38] sm:leading-[1.42] text-[#FDFBD4]/90">
                       {card.bullets.map((bullet, bIdx) => (
                         <li key={bIdx} className="flex items-start gap-1.5">
                           <span aria-hidden="true">-</span>
@@ -468,9 +481,9 @@ export const ProcessSection: React.FC = () => {
                       ))}
                     </ul>
 
-                    <div className="mt-2.5 pt-2 border-t border-[#FDFBD4]/15 flex items-center justify-between text-[10px] font-mono tracking-wider uppercase text-[#D9D7B6]">
-                      <span>{card.tools}</span>
-                      <span>Step {card.number}</span>
+                    <div className="mt-2 sm:mt-2.5 pt-1.5 sm:pt-2 border-t border-[#FDFBD4]/15 flex items-center justify-between text-[9px] sm:text-[10px] font-mono tracking-wider uppercase text-[#D9D7B6]">
+                      <span className="truncate pr-2">{card.tools}</span>
+                      <span className="shrink-0">Step {card.number}</span>
                     </div>
                   </div>
                 </article>
